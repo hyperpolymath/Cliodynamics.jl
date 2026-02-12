@@ -7,7 +7,7 @@ K9!
 {
   pedigree = {
     schema_version = "1.0.0",
-    component_type = "library-build",
+    component_type = "simulation-runner",
     security = {
       leash = 'Hunt,
       trust_level = "full-system-access",
@@ -17,9 +17,9 @@ K9!
       signature_required = true,
     },
     metadata = {
-      name = "Cliodynamics.jl",
+      name = "cliodynamics-runner",
       version = "1.0.0",
-      description = "Build and deployment automation for Cliodynamics.jl",
+      description = "Build, test, and run Cliodynamics.jl simulation models",
       author = "Jonathan D.A. Jewell <jonathan.jewell@open.ac.uk>",
     },
     warnings = [
@@ -29,9 +29,9 @@ K9!
       "Use dry-run mode first: ./must --dry-run run your-file.k9.ncl",
     ],
     side_effects = [
-      "Creates build artifacts in target/ or _build/",
-      "Runs just recipes for compilation",
-      "No network access required for local builds",
+      "Creates Manifest.toml in project directory via Pkg.instantiate()",
+      "Executes Julia test suite via Pkg.test()",
+      "No network access required after initial dependency installation",
     ],
   },
 
@@ -53,21 +53,14 @@ K9!
   recipes = {
     # Main entry point (runs by default)
     default = {
-      recipe = "build",
-      description = "Build the project",
+      recipe = "test",
+      description = "Run Cliodynamics.jl test suite",
     },
 
-    # Define your recipes here
-    "main-task" = {
+    "test" = {
       dependencies = ["check-prerequisites"],
       commands = [
-        "echo 'Building project...'",
-        # Example: Create directory
-        # "mkdir -p %{config.target_dir}",
-        # Example: Run a command
-        # "just build",
-        # Example: Conditional execution
-        # "@if [ \"%{config.dry_run}\" = \"true\" ]; then echo '[DRY-RUN] Would execute'; else actual-command; fi",
+        "julia --project=. -e 'using Pkg; Pkg.test()'",
       ],
     },
 
@@ -84,27 +77,27 @@ K9!
 
     # Add more recipes as needed
     "build" = {
-      description = "Build the project",
+      description = "Install Julia dependencies",
       commands = [
-        "echo 'Build step completed'",
+        "julia --project=. -e 'using Pkg; Pkg.instantiate()'",
       ],
     },
 
-    "deploy" = {
-      description = "Deploy the application",
+    "examples" = {
+      description = "Run example scripts",
       dependencies = ["build"],
       commands = [
-        "echo 'Deployment step completed'",
+        "julia --project=. examples/basic_usage.jl",
+        "julia --project=. examples/historical_analysis.jl",
       ],
     },
 
     "clean" = {
       description = "Clean up generated files",
       commands = [
-        "echo '⚠️  This will delete files - waiting 3 seconds...'",
+        "echo '⚠️  This will delete Manifest.toml - waiting 3 seconds...'",
         "sleep 3",
-        "echo 'Cleanup completed'",
-        # "rm -rf %{config.target_dir}",
+        "rm -f Manifest.toml",
       ],
     },
   },
@@ -117,7 +110,7 @@ K9!
 }
 
 # Usage:
-# 1. Fill in TODO items above
+# 1. Fill in FILL: placeholders above
 # 2. Define configuration with contracts
 # 3. Implement Just recipes with your commands
 # 4. Test with dry-run: ./must --dry-run run your-file.k9.ncl
@@ -127,7 +120,7 @@ K9!
 # 8. Users verify and run: ./must verify && ./must run your-file.k9.ncl
 #
 # Security checklist:
-# ✓ All TODO items filled in
+# ✓ All FILL: placeholders filled in
 # ✓ side_effects documented accurately
 # ✓ Commands reviewed for safety
 # ✓ No hardcoded secrets or credentials

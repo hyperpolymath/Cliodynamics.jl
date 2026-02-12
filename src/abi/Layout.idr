@@ -141,22 +141,22 @@ checkCABI layout =
 -- Example Layouts
 --------------------------------------------------------------------------------
 
-||| Example: Simple struct layout
+||| SimulationResult struct layout (matches Types.SimulationResult)
 public export
-exampleLayout : StructLayout
-exampleLayout =
+simulationResultLayout : StructLayout
+simulationResultLayout =
   MkStructLayout
-    [ MkField "x" 0 4 4     -- Bits32 at offset 0
-    , MkField "y" 8 8 8     -- Bits64 at offset 8 (4 bytes padding)
-    , MkField "z" 16 8 8    -- Double at offset 16
+    [ MkField "time" 0 8 8        -- Double at offset 0
+    , MkField "population" 8 8 8  -- Double at offset 8
+    , MkField "elites" 16 8 8     -- Double at offset 16
     ]
     24  -- Total size: 24 bytes
     8   -- Alignment: 8 bytes
 
-||| Proof that example layout is valid
+||| Proof that SimulationResult layout is valid
 export
-exampleLayoutValid : CABICompliant exampleLayout
-exampleLayoutValid = CABIOk exampleLayout ?exampleFieldsAligned
+simulationResultLayoutValid : CABICompliant simulationResultLayout
+simulationResultLayoutValid = CABIOk simulationResultLayout ?simulationResultFieldsAligned
 
 --------------------------------------------------------------------------------
 -- Offset Calculation

@@ -3,8 +3,8 @@
 ||| This module defines the Application Binary Interface (ABI) for this library.
 ||| All type definitions include formal proofs of correctness.
 |||
-||| Replace Cliodynamics with your project name.
-||| Replace {{TYPES}} with your actual type definitions.
+||| Defines the ABI types for the Cliodynamics library.
+||| Types include simulation results, population parameters, and error codes.
 |||
 ||| @see https://idris2.readthedocs.io for Idris2 documentation
 
@@ -167,27 +167,24 @@ cAlignOf p _ = ptrSize p `div` 8
 -- Example Struct with Layout Proof
 --------------------------------------------------------------------------------
 
-||| Example C-compatible struct
-||| Replace this with your actual data types
+||| C-compatible simulation result struct
+||| Represents a single time-step output from cliodynamic models
 public export
-record ExampleStruct where
-  constructor MkExampleStruct
-  field1 : Bits32
-  field2 : Bits64
-  field3 : Double
+record SimulationResult where
+  constructor MkSimulationResult
+  time : Double
+  population : Double
+  elites : Double
 
-||| Prove the struct has correct size
+||| Prove the struct has correct size (3 * 8 bytes = 24 bytes, 8-byte aligned)
 public export
-exampleStructSize : (p : Platform) -> HasSize ExampleStruct 16
-exampleStructSize p =
-  -- 4 bytes (Bits32) + 4 padding + 8 bytes (Bits64) + 8 bytes (Double) = 24
-  -- But with alignment, it's actually platform-specific
-  SizeProof
+simulationResultSize : (p : Platform) -> HasSize SimulationResult 24
+simulationResultSize p = SizeProof
 
-||| Prove the struct has correct alignment
+||| Prove the struct has correct alignment (8-byte for Double fields)
 public export
-exampleStructAlign : (p : Platform) -> HasAlignment ExampleStruct 8
-exampleStructAlign p = AlignProof
+simulationResultAlign : (p : Platform) -> HasAlignment SimulationResult 8
+simulationResultAlign p = AlignProof
 
 --------------------------------------------------------------------------------
 -- FFI Declarations
@@ -197,16 +194,16 @@ exampleStructAlign p = AlignProof
 ||| These will be implemented in Zig FFI
 namespace Foreign
 
-  ||| External function example
+  ||| Run a simulation step
   export
-  %foreign "C:example_function, libexample"
-  prim__exampleFunction : Bits64 -> PrimIO Bits32
+  %foreign "C:cliodynamics_step, libcliodynamics"
+  prim__step : Bits64 -> PrimIO Bits32
 
-  ||| Safe wrapper around FFI function
+  ||| Safe wrapper around simulation step
   export
-  exampleFunction : Handle -> IO (Either Result Bits32)
-  exampleFunction h = do
-    result <- primIO (prim__exampleFunction (handlePtr h))
+  step : Handle -> IO (Either Result Bits32)
+  step h = do
+    result <- primIO (prim__step (handlePtr h))
     pure (Right result)
 
 --------------------------------------------------------------------------------
