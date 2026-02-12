@@ -7,7 +7,7 @@
     (version "0.1.0")
     (schema-version "1.0.0")
     (created "2026-02-07")
-    (updated "2026-02-12")
+    (updated "2026-02-13")
     (project "Cliodynamics.jl")
     (repo "hyperpolymath/Cliodynamics.jl"))
 
@@ -18,7 +18,7 @@
 
   (current-position
     (phase "beta")
-    (overall-completion 90)
+    (overall-completion 95)
     (components
       ("malthusian-model" . 100)
       ("dst-model" . 100)
@@ -29,9 +29,9 @@
       ("collective-action" . 100)
       ("utility-functions" . 100)
       ("test-suite" . 100)
-      ("documentation" . 85)
+      ("documentation" . 90)
       ("examples" . 60)
-      ("infrastructure" . 75))
+      ("infrastructure" . 95))
     (working-features
       "Malthusian population dynamics model"
       "Demographic-structural theory (DST) model"
@@ -88,9 +88,7 @@
     (critical ())
     (high ())
     (medium
-      ("Need Julia-specific examples to replace ReScript template examples"
-       "ABI/FFI template files need customization for actual use"
-       "Documentation needs polish for registry submission"))
+      ("Documentation needs polish for registry submission"))
     (low
       ("Plots dependency removed - examples need updating"
        "README.adoc duplicates README.md content")))
@@ -98,8 +96,7 @@
   (critical-next-actions
     (immediate
       "Complete Julia usage examples (basic_usage.jl, historical_analysis.jl)"
-      "Customize remaining template files (ABI, FFI, documentation)"
-      "Update SCM files with Cliodynamics-specific content")
+      "Polish documentation for registry submission")
     (this-week
       "Integrate with Seshat Global History Databank"
       "Add plotting recipes for model outputs"
@@ -114,7 +111,10 @@
      (actions
        "Fixed SCM directory structure (.machines_readable/6scm -> .machine_readable)"
        "Updated all SPDX headers (AGPL -> PMPL)"
-       "Began SCM file customization for Cliodynamics.jl"))))
+       "Completed template customization (ABI/FFI, K9, citations, AI manifest)"
+       "Removed RSR template artifacts (RSR_OUTLINE.adoc)"
+       "Fixed all Julia test failures: @kwdef structs, keyword args, sigmoid formula"
+       "All 85 tests passing (was 49 pass, 3 fail, 5 error)"))))
 
 ;; Helper functions
 (define (get-completion-percentage state)
