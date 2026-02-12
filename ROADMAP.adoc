@@ -1,22 +1,74 @@
 // SPDX-License-Identifier: PMPL-1.0-or-later
-= YOUR Template Repo Roadmap
+= Cliodynamics.jl Roadmap
 
 == Current Status
 
-Initial development phase.
+Beta release at v0.1.0. Core cliodynamic models implemented and tested. Julia package ready for community use and feedback.
 
-== Milestones
+== Completed Milestones
 
-=== v0.1.0 - Foundation
-* [ ] Core functionality
-* [ ] Basic documentation
-* [ ] CI/CD pipeline
+=== v0.1.0 - Core Models ✓
+* [x] Malthusian population dynamics model
+* [x] Demographic-structural theory (DST) model
+* [x] Elite overproduction index calculation
+* [x] Political stress indicator (PSI)
+* [x] Secular cycle analysis and phase detection
+* [x] State capacity model
+* [x] Collective action problem modeling
+* [x] Utility functions (moving average, detrend, normalize, etc.)
+* [x] Comprehensive test suite (16 exported functions)
+* [x] All tests passing
 
-=== v1.0.0 - Stable Release
-* [ ] Full feature set
-* [ ] Comprehensive tests
-* [ ] Production ready
+== In Progress
 
-== Future Directions
+=== v0.2.0 - Examples & Data Integration
+* [x] Julia usage examples (basic_usage.jl, historical_analysis.jl)
+* [ ] Empirical dataset integration (Seshat Global History Databank)
+* [ ] Plotting recipes for Plots.jl integration
+* [ ] Model fitting to historical data utilities
+* [ ] Parameter estimation with Optim.jl workflows
 
-_To be determined based on community feedback._
+== Planned
+
+=== v0.3.0 - Visualization & Documentation
+* [ ] Interactive plotting with Makie.jl
+* [ ] Documenter.jl comprehensive documentation
+* [ ] Publication-quality figure generation
+* [ ] Tutorial notebooks (Pluto.jl or Jupyter)
+
+=== v1.0.0 - Production Release
+* [ ] Bayesian inference support (Turing.jl integration)
+* [ ] Spatial cliodynamic models (geographic extension)
+* [ ] Agent-based model components
+* [ ] Julia General registry submission
+* [ ] Performance benchmarks and optimization
+* [ ] API stability guarantees
+
+== Future Directions (v1.x+)
+
+=== Advanced Methods
+* Causal inference for historical processes
+* Machine learning integration for pattern detection
+* Network analysis for elite dynamics
+* Time-varying parameter models
+
+=== Ecosystem Integration
+* Integration with economic history packages (Cliometrics.jl)
+* Compatibility with DifferentialEquations.jl ecosystem
+* DataFrames.jl workflows for historical time series
+* Interoperability with R cliodynamics packages
+
+=== Domain Expansion
+* Archaeological data analysis
+* Climate-society interaction modeling
+* Epidemiological-demographic models
+* Institutional evolution analysis
+
+== Community Goals
+
+* Academic citations in cliodynamics research
+* Collaboration with Complexity Science Hub Vienna
+* Collaboration with Seshat Global History Databank
+* Integration with Peter Turchin's research program
+* JuliaCon presentation
+* Publication in _Cliodynamics: The Journal of Quantitative History and Cultural Evolution_

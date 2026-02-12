@@ -4,7 +4,7 @@
 (define agentic-config
   `((version . "1.0.0")
     (claude-code
-      ((model . "claude-opus-4-5-20251101")
+      ((model . "claude-opus-4-6")
        (tools . ("read" "edit" "bash" "grep" "glob"))
        (permissions . "read-all")))
     (patterns
@@ -12,5 +12,6 @@
        (refactoring . "conservative")
        (testing . "comprehensive")))
     (constraints
-      ((languages . ())
+      ((languages . ("julia"))
+       (primary-runtime . "julia")
        (banned . ("typescript" "go" "python" "makefile"))))))

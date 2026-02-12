@@ -1,4 +1,0 @@
-To github.com:hyperpolymath/Cliodynamics.jl.git
-   75fc232..0529627  HEAD -> main
-branch 'main' set up to track 'origin/main'.
-  Successfully pushed to Cliodynamics.jl/

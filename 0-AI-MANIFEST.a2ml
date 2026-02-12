@@ -4,7 +4,7 @@
 
 ## WHAT IS THIS?
 
-This is the AI manifest for **[YOUR-REPO-NAME]**. It declares:
+This is the AI manifest for **Cliodynamics.jl**. It declares:
 - Canonical file locations (where things MUST be, and nowhere else)
 - Critical invariants (rules that must NEVER be violated)
 - Repository structure and organization
@@ -53,10 +53,19 @@ Bot-specific instructions for:
 This repo contains:
 
 ```
-[YOUR-REPO-NAME]/
+Cliodynamics.jl/
 ├── 0-AI-MANIFEST.a2ml         # THIS FILE (start here)
 ├── README.md                   # Project overview
-├── [your source files]         # Main code
+├── Project.toml                # Julia package manifest
+├── src/
+│   ├── Cliodynamics.jl         # Main module (all code)
+│   └── abi/                    # Idris2 ABI definitions (template)
+├── test/
+│   └── runtests.jl             # Test suite
+├── examples/                   # Julia usage examples
+│   ├── basic_usage.jl
+│   └── historical_analysis.jl
+├── ffi/zig/                    # Zig FFI (template)
 ├── .machine_readable/          # SCM files (6 files)
 │   ├── STATE.scm
 │   ├── META.scm
@@ -110,7 +119,7 @@ After reading this file, demonstrate understanding by stating:
 ## META
 
 - **Format Version:** 1.0.0
-- **Created:** [DATE]
-- **Maintained By:** [YOUR-NAME/ORG]
+- **Created:** 2026-02-07
+- **Maintained By:** Jonathan D.A. Jewell / hyperpolymath
 - **License:** PMPL-1.0-or-later
 - **Protocol:** https://github.com/hyperpolymath/0-ai-gatekeeper-protocol
