@@ -1,56 +1,120 @@
 ;; SPDX-License-Identifier: PMPL-1.0-or-later
-;; STATE.scm - Project state tracking for rsr-template-repo
+;; STATE.scm - Project state tracking for Cliodynamics.jl
 ;; Media-Type: application/vnd.state+scm
 
-(define-state rsr-template-repo
+(define-state Cliodynamics.jl
   (metadata
     (version "0.1.0")
     (schema-version "1.0.0")
-    (created "2026-01-30")
-    (updated "2026-01-30")
-    (project "rsr-template-repo")
-    (repo "hyperpolymath/rsr-template-repo"))
+    (created "2026-02-07")
+    (updated "2026-02-12")
+    (project "Cliodynamics.jl")
+    (repo "hyperpolymath/Cliodynamics.jl"))
 
   (project-context
-    (name "rsr-template-repo")
-    (tagline "Hyperpolymath ecosystem project")
-    (tech-stack ()))
+    (name "Cliodynamics.jl")
+    (tagline "Julia package for quantitative modeling of historical dynamics and social complexity")
+    (tech-stack ("Julia" "DifferentialEquations.jl" "DataFrames.jl" "Optim.jl" "Statistics" "LinearAlgebra")))
 
   (current-position
-    (phase "initialization")
-    (overall-completion 5)
-    (components ())
-    (working-features ()))
+    (phase "beta")
+    (overall-completion 90)
+    (components
+      ("malthusian-model" . 100)
+      ("dst-model" . 100)
+      ("elite-overproduction" . 100)
+      ("political-stress" . 100)
+      ("secular-cycles" . 100)
+      ("state-capacity" . 100)
+      ("collective-action" . 100)
+      ("utility-functions" . 100)
+      ("test-suite" . 100)
+      ("documentation" . 85)
+      ("examples" . 60)
+      ("infrastructure" . 75))
+    (working-features
+      "Malthusian population dynamics model"
+      "Demographic-structural theory (DST) model"
+      "Elite overproduction index calculation"
+      "Political stress indicator (PSI)"
+      "Secular cycle analysis and phase detection"
+      "State capacity model"
+      "Collective action problem modeling"
+      "Moving average utility function"
+      "Detrending utility function"
+      "Normalization utility function"
+      "Carrying capacity calculation"
+      "Crisis threshold detection"
+      "Instability events identification"
+      "Conflict intensity analysis"
+      "Population pressure metrics"
+      "Comprehensive test suite (16 exported functions)"
+      "All tests passing"))
 
   (route-to-mvp
     (milestones
-      ((name "Initial Setup")
-       (status "in-progress")
-       (completion 50)
+      ((name "v0.1.0 - Core Models")
+       (status "done")
+       (completion 100)
        (items
-         ("Initialize repository structure" . done)
-         ("Add standard workflows" . done)
-         ("Define project scope" . todo)
-         ("Set up development environment" . todo)))))
+         ("Malthusian model implementation" . done)
+         ("DST model implementation" . done)
+         ("Elite overproduction index" . done)
+         ("Political stress indicator" . done)
+         ("Secular cycle analysis" . done)
+         ("State formation models" . done)
+         ("Utility functions" . done)
+         ("Comprehensive test suite" . done)))
+      ((name "v0.2.0 - Examples & Data Integration")
+       (status "in-progress")
+       (completion 60)
+       (items
+         ("Julia usage examples" . in-progress)
+         ("Historical dataset integration (Seshat)" . todo)
+         ("Plotting recipes for Plots.jl" . todo)
+         ("Model fitting to historical data" . todo)
+         ("Parameter estimation with Optim.jl" . todo)))
+      ((name "v1.0.0 - Production Release")
+       (status "todo")
+       (completion 0)
+       (items
+         ("Bayesian inference support (Turing.jl)" . todo)
+         ("Spatial cliodynamic models" . todo)
+         ("Interactive documentation (Documenter.jl)" . todo)
+         ("Publication-quality examples" . todo)
+         ("Julia General registry submission" . todo)))))
 
   (blockers-and-issues
     (critical ())
     (high ())
-    (medium ())
-    (low ()))
+    (medium
+      ("Need Julia-specific examples to replace ReScript template examples"
+       "ABI/FFI template files need customization for actual use"
+       "Documentation needs polish for registry submission"))
+    (low
+      ("Plots dependency removed - examples need updating"
+       "README.adoc duplicates README.md content")))
 
   (critical-next-actions
     (immediate
-      "Define project scope and objectives"
-      "Update README.adoc with project description")
+      "Complete Julia usage examples (basic_usage.jl, historical_analysis.jl)"
+      "Customize remaining template files (ABI, FFI, documentation)"
+      "Update SCM files with Cliodynamics-specific content")
     (this-week
-      "Set up development environment"
-      "Create initial architecture design")
+      "Integrate with Seshat Global History Databank"
+      "Add plotting recipes for model outputs"
+      "Write comprehensive Documenter.jl documentation")
     (this-month
-      "Implement core functionality"
-      "Add comprehensive tests"))
+      "Model fitting utilities with Optim.jl"
+      "Bayesian parameter estimation with Turing.jl"
+      "Prepare for Julia General registry submission"))
 
-  (session-history ()))
+  (session-history
+    ((date "2026-02-12")
+     (actions
+       "Fixed SCM directory structure (.machines_readable/6scm -> .machine_readable)"
+       "Updated all SPDX headers (AGPL -> PMPL)"
+       "Began SCM file customization for Cliodynamics.jl"))))
 
 ;; Helper functions
 (define (get-completion-percentage state)
