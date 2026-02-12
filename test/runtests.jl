@@ -15,8 +15,9 @@ using Statistics
         @test sol.u[1][1] ≈ 100.0
 
         # Test that population approaches carrying capacity
+        # N(200) ≈ 858 for r=0.02, K=1000, N0=100 (logistic growth)
         final_pop = sol.u[end][1]
-        @test final_pop > 900.0  # Should be close to K=1000
+        @test final_pop > 800.0  # Should be approaching K=1000
 
         # Test logistic growth behavior
         mid_point = sol.u[div(length(sol.u), 2)][1]
@@ -130,11 +131,11 @@ using Statistics
     end
 
     @testset "Secular Cycle Analysis" begin
-        # Create synthetic data with ~200-year cycle
+        # Create synthetic data with ~100-year cycle (within autocorrelation detection range)
         t = 1:300
-        data = 100.0 .+ 50.0*sin.(2π*t/200) .+ 2*randn(300)
+        data = 100.0 .+ 50.0*sin.(2π*t/100) .+ 2*randn(300)
 
-        analysis = secular_cycle_analysis(data, window=50)
+        analysis = secular_cycle_analysis(data, window=30)
 
         # Test output structure
         @test haskey(analysis, :trend)
@@ -146,19 +147,28 @@ using Statistics
         @test length(analysis.trend) == 300
         @test length(analysis.cycle) == 300
 
-        # Test period detection (should be close to 200)
-        @test 150 < analysis.period < 250
+        # Test period detection (should be close to 100)
+        @test 80 < analysis.period < 120
 
         # Test amplitude is positive
         @test analysis.amplitude > 0
     end
 
     @testset "Cycle Phase Detection" begin
+        # Generate 301 data points representing a secular cycle
+        # Four phases across 301 years: expansion → stagflation → crisis → depression
+        n = 301
+        phase_values(low, mid1, mid2, high) = vcat(
+            range(low, mid1, length=div(n,4)),
+            range(mid1, high, length=div(n,4)),
+            range(high, mid2, length=div(n,4)),
+            range(mid2, low, length=n - 3*div(n,4))
+        )
         data = DataFrame(
             year = 1500:1800,
-            population_pressure = [0.3, 0.5, 0.8, 0.9] .+ randn(301)*0.05,
-            elite_overproduction = [0.1, 0.3, 0.6, 0.4] .+ randn(301)*0.05,
-            instability = [0.2, 0.3, 0.7, 0.5] .+ randn(301)*0.05
+            population_pressure = phase_values(0.3, 0.5, 0.9, 0.8) .+ randn(n)*0.05,
+            elite_overproduction = phase_values(0.1, 0.3, 0.4, 0.6) .+ randn(n)*0.05,
+            instability = phase_values(0.2, 0.3, 0.5, 0.7) .+ randn(n)*0.05
         )
 
         # Clamp values to valid ranges

@@ -104,7 +104,7 @@ Parameters for basic Malthusian population dynamics model.
 - `K::Float64`: Environmental carrying capacity
 - `N0::Float64`: Initial population size
 """
-struct MalthusianParams
+Base.@kwdef struct MalthusianParams
     r::Float64   # Intrinsic growth rate
     K::Float64   # Carrying capacity
     N0::Float64  # Initial population
@@ -125,7 +125,7 @@ Parameters for Turchin's demographic-structural theory model.
 - `E0::Float64`: Initial elite population
 - `S0::Float64`: Initial state fiscal capacity
 """
-struct DemographicStructuralParams
+Base.@kwdef struct DemographicStructuralParams
     r::Float64   # Population growth rate
     K::Float64   # Carrying capacity
     w::Float64   # Elite wage premium
@@ -147,7 +147,7 @@ Parameters for state capacity and collective action modeling.
 - `β::Float64`: Military effectiveness
 - `γ::Float64`: Institutional quality
 """
-struct StateCapacityParams
+Base.@kwdef struct StateCapacityParams
     τ::Float64   # Tax rate
     α::Float64   # Administrative efficiency
     β::Float64   # Military effectiveness
@@ -461,7 +461,7 @@ function instability_probability(psi::Float64)
 end
 
 """
-    conflict_intensity(events::Vector{InstabilityEvent}, window::Int=10)
+    conflict_intensity(events::Vector{InstabilityEvent}; window::Int=10)
 
 Calculate conflict intensity over time from instability events.
 
@@ -482,7 +482,7 @@ events = [
 intensity = conflict_intensity(events, window=5)
 ```
 """
-function conflict_intensity(events::Vector{InstabilityEvent}, window::Int=10)
+function conflict_intensity(events::Vector{InstabilityEvent}; window::Int=10)
     if isempty(events)
         return DataFrame(year = Int[], intensity = Float64[])
     end
@@ -494,7 +494,7 @@ function conflict_intensity(events::Vector{InstabilityEvent}, window::Int=10)
     for (i, year) in enumerate(year_range)
         # Sum intensities within window
         relevant_events = filter(e -> abs(e.year - year) <= window÷2, events)
-        intensity[i] = sum(e.intensity for e in relevant_events)
+        intensity[i] = isempty(relevant_events) ? 0.0 : sum(e.intensity for e in relevant_events)
     end
 
     DataFrame(year = collect(year_range), intensity = intensity)
@@ -687,23 +687,21 @@ function collective_action_problem(group_size::Int, benefit::Float64, cost::Floa
     # Individual benefit
     individual_benefit = benefit / group_size
 
-    # Net benefit
+    # Net benefit per individual
     net_benefit = individual_benefit - cost
 
-    # Probability of participation (logistic model)
+    # Probability of individual participation (logistic model)
     p_individual = 1.0 / (1.0 + exp(-net_benefit / cost))
 
     # Probability of success (need critical mass, ~30%)
     critical_mass = ceil(Int, 0.3 * group_size)
 
-    # Binomial approximation: probability that >= critical_mass participate
+    # Expected participants
     expected_participants = group_size * p_individual
 
-    if expected_participants >= critical_mass
-        return min(1.0, expected_participants / critical_mass - 0.5)
-    else
-        return max(0.0, expected_participants / critical_mass)
-    end
+    # Sigmoid probability of reaching critical mass
+    ratio = expected_participants / critical_mass
+    return 1.0 / (1.0 + exp(-3.0 * (ratio - 1.0)))
 end
 
 
