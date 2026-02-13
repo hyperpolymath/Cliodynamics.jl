@@ -1,7 +1,7 @@
 name = "Cliodynamics"
 uuid = "8d2f3e70-4c6b-5e9c-a3d1-2f8e9c0b1d2e"
 authors = ["Jonathan D.A. Jewell <jonathan.jewell@open.ac.uk>"]
-version = "0.1.0"
+version = "0.2.0"
 
 [deps]
 DifferentialEquations = "0c46a032-eb83-5123-abaf-570d42b7fbaa"
@@ -10,12 +10,19 @@ LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
 Optim = "429524aa-4258-5aef-a3af-852621145aeb"
 DataFrames = "a93c6f00-e57d-5684-b7b6-d8193f3e46c0"
 
+[weakdeps]
+RecipesBase = "3cdcf5f2-e6d6-5e1a-8b42-8b8bba0c8c9b"
+
+[extensions]
+CliodynamicsPlotsExt = "RecipesBase"
+
 [compat]
-julia = "1.6"
+julia = "1.10"
 DifferentialEquations = "7"
 Statistics = "1"
 Optim = "1"
 DataFrames = "1"
+RecipesBase = "1"
 
 [extras]
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"

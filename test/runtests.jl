@@ -307,4 +307,97 @@ using Statistics
         @test event.type == :revolution
     end
 
+    @testset "Model Fitting - Malthusian" begin
+        # Generate synthetic data from known parameters
+        true_params = MalthusianParams(r=0.03, K=500.0, N0=50.0)
+        sol = malthusian_model(true_params, tspan=(0.0, 100.0))
+        years = collect(0.0:10.0:100.0)
+        population = [sol(t)[1] for t in years]
+
+        result = fit_malthusian(years, population, r_init=0.01, K_init=600.0)
+
+        # Fitted parameters should be close to true values
+        @test abs(result.params.r - 0.03) < 0.01
+        @test abs(result.params.K - 500.0) < 50.0
+        @test result.converged
+        @test result.loss < 1.0
+    end
+
+    @testset "Model Fitting - Demographic-Structural" begin
+        # Generate synthetic data from known parameters
+        true_params = DemographicStructuralParams(
+            r=0.015, K=1000.0, w=2.0, δ=0.03, ε=0.001,
+            N0=500.0, E0=10.0, S0=100.0
+        )
+        sol = demographic_structural_model(true_params, tspan=(0.0, 200.0))
+        years = collect(0.0:20.0:200.0)
+
+        data = DataFrame(
+            year = years,
+            population = [sol(t)[1] for t in years],
+            elites = [sol(t)[2] for t in years],
+            state_capacity = [sol(t)[3] for t in years]
+        )
+
+        result = fit_demographic_structural(data)
+
+        # Should converge (exact recovery is hard with NelderMead)
+        @test result.loss < 1.0
+        @test result.params.r > 0.0
+        @test result.params.K > 0.0
+    end
+
+    @testset "Parameter Estimation" begin
+        # Fit a simple exponential model
+        model_fn(p, t) = p[1] .* exp.(p[2] .* (t .- t[1]))
+
+        true_A, true_r = 100.0, 0.02
+        years = collect(0.0:10.0:100.0)
+        observed = true_A .* exp.(true_r .* years) .+ randn(length(years)) .* 5.0
+
+        result = estimate_parameters(model_fn, observed, years, [80.0, 0.01],
+                                      n_bootstrap=50)
+
+        @test abs(result.params[1] - true_A) < 30.0
+        @test abs(result.params[2] - true_r) < 0.01
+        @test result.converged
+
+        # CI should bracket the point estimate
+        @test result.ci_lower[1] < result.params[1]
+        @test result.ci_upper[1] > result.params[1]
+        @test result.ci_lower[2] < result.params[2]
+        @test result.ci_upper[2] > result.params[2]
+    end
+
+    @testset "Seshat Data Integration" begin
+        seshat_path = joinpath(@__DIR__, "..", "data", "seshat_sample.csv")
+
+        # Test load
+        raw = load_seshat_csv(seshat_path)
+        @test nrow(raw) > 0
+        @test hasproperty(raw, :year)
+        @test hasproperty(raw, :polity)
+        @test hasproperty(raw, :population)
+
+        # Test prepare with polity filter
+        roman = prepare_seshat_data(raw, polity="RomPrinworlds")
+        @test nrow(roman) > 0
+        @test all(roman.polity .== "RomPrinworlds")
+        @test hasproperty(roman, :elite_ratio)
+
+        # Test prepare without filter
+        all_data = prepare_seshat_data(raw)
+        @test nrow(all_data) == nrow(raw)
+
+        # Test that prepared data works with EOI
+        full_roman = prepare_seshat_data(raw)
+        roman_filtered = filter(row -> occursin("Rom", string(row.polity)), full_roman)
+        sort!(roman_filtered, :year)
+        eoi = elite_overproduction_index(roman_filtered)
+        @test nrow(eoi) == nrow(roman_filtered)
+
+        # Test missing file error
+        @test_throws ArgumentError load_seshat_csv("/nonexistent/file.csv")
+    end
+
 end

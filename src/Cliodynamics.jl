@@ -89,6 +89,12 @@ export carrying_capacity_estimate, population_pressure
 export normalize_timeseries, detrend, moving_average
 export crisis_threshold, instability_probability
 
+# Export model fitting and parameter estimation
+export fit_malthusian, fit_demographic_structural, estimate_parameters
+
+# Export Seshat data integration
+export load_seshat_csv, prepare_seshat_data
+
 
 # ============================================================================
 # Type Definitions
@@ -892,6 +898,347 @@ function instability_events(data::DataFrame, threshold::Float64)
     end
 
     return events
+end
+
+
+# ============================================================================
+# Model Fitting
+# ============================================================================
+
+"""
+    fit_malthusian(years::Vector{<:Real}, population::Vector{Float64};
+                   r_init=0.01, K_init=nothing, method=NelderMead())
+
+Fit Malthusian population model to observed data using Optim.jl.
+
+Estimates growth rate `r` and carrying capacity `K` from historical
+population time series by minimizing the sum of squared residuals between
+the ODE solution and observed data.
+
+# Arguments
+- `years::Vector{<:Real}`: Observation years
+- `population::Vector{Float64}`: Observed population values
+- `r_init`: Initial guess for growth rate (default: 0.01)
+- `K_init`: Initial guess for carrying capacity (default: 1.2 × max population)
+- `method`: Optim.jl optimization method (default: NelderMead())
+
+# Returns
+- `NamedTuple`: Contains `:params` (MalthusianParams), `:loss`, `:converged`
+
+# Examples
+```julia
+years = collect(1800.0:1900.0)
+pop = 100.0 .* exp.(0.02 .* (years .- 1800)) ./ (1 .+ (exp.(0.02 .* (years .- 1800)) .- 1) ./ 10)
+result = fit_malthusian(years, pop)
+println("Estimated r: ", result.params.r, ", K: ", result.params.K)
+```
+"""
+function fit_malthusian(years::Vector{<:Real}, population::Vector{Float64};
+                        r_init=0.01, K_init=nothing, method=NelderMead())
+    K_init_val = K_init === nothing ? maximum(population) * 1.2 : Float64(K_init)
+    N0 = population[1]
+    tspan = (Float64(years[1]), Float64(years[end]))
+
+    function objective(p)
+        r, K = p
+        (r <= 0 || K <= 0) && return Inf
+        params = MalthusianParams(r=r, K=K, N0=N0)
+        try
+            sol = malthusian_model(params, tspan=tspan)
+            predicted = [sol(Float64(t))[1] for t in years]
+            return sum((predicted .- population).^2)
+        catch
+            return Inf
+        end
+    end
+
+    result = optimize(objective, [r_init, K_init_val], method)
+    r_fit, K_fit = Optim.minimizer(result)
+
+    return (
+        params = MalthusianParams(r=r_fit, K=K_fit, N0=N0),
+        loss = Optim.minimum(result),
+        converged = Optim.converged(result)
+    )
+end
+
+"""
+    fit_demographic_structural(data::DataFrame; tspan=nothing, method=NelderMead())
+
+Fit demographic-structural theory model to observed data using Optim.jl.
+
+Estimates model parameters (r, K, w, δ, ε) from a DataFrame containing
+`:year`, `:population`, `:elites`, and `:state_capacity` columns.
+
+# Arguments
+- `data::DataFrame`: Must contain `:year`, `:population`, `:elites`, `:state_capacity`
+- `tspan`: Time span override (default: from data year range)
+- `method`: Optim.jl optimization method (default: NelderMead())
+
+# Returns
+- `NamedTuple`: Contains `:params` (DemographicStructuralParams), `:loss`, `:converged`
+
+# Examples
+```julia
+data = DataFrame(
+    year = 1500:1700,
+    population = ...,
+    elites = ...,
+    state_capacity = ...
+)
+result = fit_demographic_structural(data)
+```
+"""
+function fit_demographic_structural(data::DataFrame; tspan=nothing, method=NelderMead())
+    for col in [:year, :population, :elites, :state_capacity]
+        hasproperty(data, col) || throw(ArgumentError("DataFrame must contain column: $col"))
+    end
+
+    years = Float64.(data.year)
+    obs_pop = Float64.(data.population)
+    obs_elites = Float64.(data.elites)
+    obs_state = Float64.(data.state_capacity)
+    tspan_val = tspan === nothing ? (years[1], years[end]) : tspan
+
+    N0, E0, S0 = obs_pop[1], obs_elites[1], obs_state[1]
+
+    function objective(p)
+        r, K, w, δ, ε = p
+        any(x -> x <= 0, p) && return Inf
+        params = DemographicStructuralParams(r=r, K=K, w=w, δ=δ, ε=ε,
+                                              N0=N0, E0=E0, S0=S0)
+        try
+            sol = demographic_structural_model(params, tspan=tspan_val)
+            loss = 0.0
+            for (i, t) in enumerate(years)
+                pred = sol(t)
+                # Weighted sum of squared errors across all three variables
+                loss += (pred[1] - obs_pop[i])^2 / maximum(obs_pop)^2
+                loss += (pred[2] - obs_elites[i])^2 / maximum(obs_elites)^2
+                loss += (pred[3] - obs_state[i])^2 / maximum(obs_state)^2
+            end
+            return loss
+        catch
+            return Inf
+        end
+    end
+
+    # Initial guesses from data
+    r_init = 0.015
+    K_init = maximum(obs_pop) * 1.5
+    w_init = 2.0
+    δ_init = 0.03
+    ε_init = maximum(obs_elites) / maximum(obs_pop) * 0.1
+
+    result = optimize(objective, [r_init, K_init, w_init, δ_init, ε_init], method)
+    r, K, w, δ, ε = Optim.minimizer(result)
+
+    return (
+        params = DemographicStructuralParams(r=r, K=K, w=w, δ=δ, ε=ε,
+                                              N0=N0, E0=E0, S0=S0),
+        loss = Optim.minimum(result),
+        converged = Optim.converged(result)
+    )
+end
+
+
+# ============================================================================
+# Parameter Estimation
+# ============================================================================
+
+"""
+    estimate_parameters(model_fn, observed::Vector{Float64}, years::Vector{<:Real},
+                        initial_params::Vector{Float64};
+                        method=NelderMead(), n_bootstrap=100)
+
+Generic parameter estimation with bootstrap confidence intervals.
+
+Fits arbitrary model functions to observed data and provides uncertainty
+estimates via bootstrap resampling.
+
+# Arguments
+- `model_fn`: Function `(params, years) -> predicted::Vector{Float64}`
+- `observed::Vector{Float64}`: Observed data
+- `years::Vector{<:Real}`: Observation times
+- `initial_params::Vector{Float64}`: Initial parameter guesses
+- `method`: Optim.jl optimization method
+- `n_bootstrap::Int`: Number of bootstrap samples for confidence intervals
+
+# Returns
+- `NamedTuple`: Contains `:params`, `:loss`, `:ci_lower`, `:ci_upper`, `:converged`
+
+# Examples
+```julia
+model_fn(p, t) = p[1] .* exp.(p[2] .* (t .- t[1]))
+result = estimate_parameters(model_fn, observed_data, years, [100.0, 0.01])
+println("95% CI for growth rate: [", result.ci_lower[2], ", ", result.ci_upper[2], "]")
+```
+"""
+function estimate_parameters(model_fn, observed::Vector{Float64}, years::Vector{<:Real},
+                              initial_params::Vector{Float64};
+                              method=NelderMead(), n_bootstrap::Int=100)
+    n = length(observed)
+
+    function objective(p)
+        try
+            predicted = model_fn(p, years)
+            return sum((predicted .- observed).^2)
+        catch
+            return Inf
+        end
+    end
+
+    # Primary fit
+    result = optimize(objective, initial_params, method)
+    best_params = Optim.minimizer(result)
+    residuals = observed .- model_fn(best_params, years)
+
+    # Bootstrap confidence intervals
+    bootstrap_params = zeros(n_bootstrap, length(initial_params))
+    for b in 1:n_bootstrap
+        # Resample residuals
+        boot_residuals = residuals[rand(1:n, n)]
+        boot_observed = model_fn(best_params, years) .+ boot_residuals
+
+        function boot_objective(p)
+            try
+                predicted = model_fn(p, years)
+                return sum((predicted .- boot_observed).^2)
+            catch
+                return Inf
+            end
+        end
+
+        boot_result = optimize(boot_objective, best_params, method)
+        bootstrap_params[b, :] = Optim.minimizer(boot_result)
+    end
+
+    ci_lower = [quantile(bootstrap_params[:, j], 0.025) for j in 1:length(initial_params)]
+    ci_upper = [quantile(bootstrap_params[:, j], 0.975) for j in 1:length(initial_params)]
+
+    return (
+        params = best_params,
+        loss = Optim.minimum(result),
+        ci_lower = ci_lower,
+        ci_upper = ci_upper,
+        converged = Optim.converged(result)
+    )
+end
+
+
+# ============================================================================
+# Seshat Global History Databank Integration
+# ============================================================================
+
+"""
+    load_seshat_csv(filepath::String)
+
+Load Seshat Global History Databank data from CSV format.
+
+Reads a CSV file with Seshat-style columns and returns a DataFrame suitable
+for cliodynamic analysis. Expected columns include NGA (Natural Geographic Area),
+Polity, Variable, Value, and Date.
+
+Supports both the standard Seshat export format and simplified tabular format
+with columns: `:year`, `:polity`, `:population`, `:territory`, `:social_complexity`.
+
+# Arguments
+- `filepath::String`: Path to CSV file
+
+# Returns
+- `DataFrame`: Loaded and cleaned data
+
+# Examples
+```julia
+data = load_seshat_csv("data/seshat_sample.csv")
+```
+"""
+function load_seshat_csv(filepath::String)
+    isfile(filepath) || throw(ArgumentError("File not found: $filepath"))
+
+    # Read CSV manually (avoid CSV.jl dependency)
+    lines = readlines(filepath)
+    isempty(lines) && throw(ArgumentError("Empty file: $filepath"))
+
+    # Skip comment lines (starting with #) and blank lines to find header
+    header_idx = findfirst(l -> !startswith(strip(l), "#") && !isempty(strip(l)), lines)
+    header_idx === nothing && throw(ArgumentError("No data found in: $filepath"))
+
+    # Parse header
+    header = Symbol.(strip.(split(lines[header_idx], ",")))
+
+    # Parse data rows (everything after header, skipping comments and blanks)
+    rows = Dict{Symbol, Vector{Any}}(col => Any[] for col in header)
+    for line in lines[header_idx+1:end]
+        isempty(strip(line)) && continue
+        startswith(strip(line), "#") && continue
+        fields = strip.(split(line, ","))
+        length(fields) != length(header) && continue
+        for (i, col) in enumerate(header)
+            val = fields[i]
+            # Try numeric conversion
+            parsed = tryparse(Float64, val)
+            push!(rows[col], parsed === nothing ? val : parsed)
+        end
+    end
+
+    DataFrame(rows)
+end
+
+"""
+    prepare_seshat_data(raw::DataFrame; polity::String="")
+
+Convert Seshat-format data into Cliodynamics.jl analysis format.
+
+Transforms raw Seshat data with columns like `:year`, `:population`,
+`:territory`, `:social_complexity` into the format expected by
+`political_stress_indicator`, `elite_overproduction_index`, etc.
+
+# Arguments
+- `raw::DataFrame`: Raw Seshat data (from `load_seshat_csv`)
+- `polity::String`: Filter to specific polity (empty string = all)
+
+# Returns
+- `DataFrame`: Ready for cliodynamic analysis with standardized columns
+
+# Examples
+```julia
+raw = load_seshat_csv("data/seshat_sample.csv")
+data = prepare_seshat_data(raw, polity="RomPrinwordscp")
+eoi = elite_overproduction_index(data)
+```
+"""
+function prepare_seshat_data(raw::DataFrame; polity::String="")
+    data = copy(raw)
+
+    # Filter by polity if specified
+    if !isempty(polity) && hasproperty(data, :polity)
+        data = filter(row -> row.polity == polity, data)
+    end
+
+    # Sort by year
+    if hasproperty(data, :year)
+        sort!(data, :year)
+    end
+
+    # Ensure required numeric columns (year included for sorting/filtering)
+    for col in [:year, :population, :elites, :territory, :state_revenue, :real_wages]
+        if hasproperty(data, col)
+            data[!, col] = Float64[Float64(x) for x in data[!, col]]
+        end
+    end
+
+    # Derive elite ratio if population and elites exist
+    if hasproperty(data, :population) && hasproperty(data, :elites)
+        data[!, :elite_ratio] = data.elites ./ data.population
+    end
+
+    # Derive population pressure if population and territory exist
+    if hasproperty(data, :population) && hasproperty(data, :territory)
+        data[!, :population_density] = data.population ./ data.territory
+    end
+
+    return data
 end
 
 end # module Cliodynamics
