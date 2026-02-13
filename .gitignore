@@ -36,6 +36,8 @@ erl_crash.dump
 *.jl.cov
 *.jl.mem
 /Manifest.toml
+/docs/Manifest.toml
+/docs/build/
 
 # ReScript
 /lib/bs/

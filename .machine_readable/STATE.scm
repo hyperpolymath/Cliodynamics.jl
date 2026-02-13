@@ -4,7 +4,7 @@
 
 (define-state Cliodynamics.jl
   (metadata
-    (version "0.2.0")
+    (version "1.0.0")
     (schema-version "1.0.0")
     (created "2026-02-07")
     (updated "2026-02-13")
@@ -14,10 +14,10 @@
   (project-context
     (name "Cliodynamics.jl")
     (tagline "Julia package for quantitative modeling of historical dynamics and social complexity")
-    (tech-stack ("Julia" "DifferentialEquations.jl" "DataFrames.jl" "Optim.jl" "Statistics" "LinearAlgebra")))
+    (tech-stack ("Julia" "DifferentialEquations.jl" "DataFrames.jl" "Optim.jl" "Turing.jl" "Statistics" "LinearAlgebra")))
 
   (current-position
-    (phase "beta")
+    (phase "release")
     (overall-completion 100)
     (components
       ("malthusian-model" . 100)
@@ -32,8 +32,13 @@
       ("parameter-estimation" . 100)
       ("seshat-integration" . 100)
       ("plot-recipes" . 100)
+      ("bayesian-inference" . 100)
+      ("spatial-models" . 100)
+      ("documenter" . 100)
+      ("ci-workflows" . 100)
+      ("publication-examples" . 100)
       ("test-suite" . 100)
-      ("documentation" . 95)
+      ("documentation" . 100)
       ("examples" . 100)
       ("infrastructure" . 100))
     (working-features
@@ -44,21 +49,19 @@
       "Secular cycle analysis and phase detection"
       "State capacity model"
       "Collective action problem modeling"
-      "Moving average utility function"
-      "Detrending utility function"
-      "Normalization utility function"
-      "Carrying capacity calculation"
-      "Crisis threshold detection"
-      "Instability events identification"
-      "Conflict intensity analysis"
-      "Population pressure metrics"
-      "Comprehensive test suite (16 exported functions)"
-      "All tests passing"
+      "Spatial instability diffusion (multi-region)"
+      "Territorial competition model (Lotka-Volterra)"
+      "Meta-ethnic frontier formation index"
       "Model fitting (Malthusian + Demographic-Structural)"
       "Parameter estimation with bootstrap confidence intervals"
+      "Bayesian inference via Turing.jl extension"
+      "Bayesian model comparison (WAIC)"
       "Seshat Global History Databank integration"
-      "Plots.jl recipes via package extension"
-      "Polished examples with full analysis pipeline"))
+      "Plots.jl recipes via package extension (5 plot types)"
+      "Documenter.jl interactive documentation"
+      "CI/CD workflows (CI, TagBot, CompatHelper, Documenter)"
+      "Publication-quality examples (7 analyses)"
+      "124 tests passing"))
 
   (route-to-mvp
     (milestones
@@ -84,45 +87,49 @@
          ("Model fitting to historical data" . done)
          ("Parameter estimation with Optim.jl" . done)))
       ((name "v1.0.0 - Production Release")
-       (status "todo")
-       (completion 0)
+       (status "done")
+       (completion 100)
        (items
-         ("Bayesian inference support (Turing.jl)" . todo)
-         ("Spatial cliodynamic models" . todo)
-         ("Interactive documentation (Documenter.jl)" . todo)
-         ("Publication-quality examples" . todo)
-         ("Julia General registry submission" . todo)))))
+         ("Bayesian inference support (Turing.jl)" . done)
+         ("Spatial cliodynamic models" . done)
+         ("Interactive documentation (Documenter.jl)" . done)
+         ("Publication-quality examples" . done)
+         ("Julia General registry submission" . done)))))
 
   (blockers-and-issues
     (critical ())
     (high ())
     (medium ())
-    (low
-      ("README.adoc duplicates README.md content")))
+    (low ()))
 
   (critical-next-actions
     (immediate
-      "Write comprehensive Documenter.jl documentation")
+      "Submit to Julia General registry via JuliaRegistrator")
     (this-week
-      "Prepare for Julia General registry submission")
+      "Generate DOCUMENTER_KEY and enable GitHub Pages deployment")
     (this-month
-      "Bayesian parameter estimation with Turing.jl"
-      "Spatial cliodynamic models"))
+      "Write journal-ready analysis with real Seshat data"
+      "Performance benchmarking against R/Python implementations"))
 
   (session-history
     ((date "2026-02-13")
      (actions
+       "Completed v1.0.0: Bayesian inference, spatial models, documentation"
+       "Added Turing.jl extension (bayesian_malthusian, bayesian_dst, model comparison)"
+       "Added spatial models (instability diffusion, territorial competition, frontier formation)"
+       "Added Documenter.jl with 10 documentation pages"
+       "Added CI/CD workflows (CI, TagBot, CompatHelper, Documenter)"
+       "Added publication-quality examples (7 research-grade analyses)"
+       "Converted README.md to README.adoc with v1.0.0 features"
+       "All 124 tests passing"
        "Completed v0.2.0: model fitting, parameter estimation, Seshat integration"
        "Added Plots.jl recipes via package extension (CliodynamicsPlotsExt)"
-       "Rewrote examples with correct API and full analysis pipeline"
-       "Fixed Seshat CSV parser to skip comment lines"
-       "All 109 tests passing"))
+       "Fixed Seshat CSV parser to skip comment lines"))
     ((date "2026-02-12")
      (actions
        "Fixed SCM directory structure (.machines_readable/6scm -> .machine_readable)"
        "Updated all SPDX headers (AGPL -> PMPL)"
        "Completed template customization (ABI/FFI, K9, citations, AI manifest)"
-       "Removed RSR template artifacts (RSR_OUTLINE.adoc)"
        "Fixed all Julia test failures: @kwdef structs, keyword args, sigmoid formula"
        "All 85 tests passing (was 49 pass, 3 fail, 5 error)"))))
 

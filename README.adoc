@@ -7,7 +7,7 @@
 
 image:https://img.shields.io/badge/license-PMPL--1.0--or--later-blue.svg[License,link=LICENSE]
 image:https://img.shields.io/badge/julia-1.10+-purple.svg[Julia,link=https://julialang.org]
-image:https://img.shields.io/badge/version-0.2.0-green.svg[Version]
+image:https://img.shields.io/badge/version-1.0.0-green.svg[Version]
 
 A Julia library for mathematical modeling and statistical analysis of historical dynamics.
 
@@ -64,14 +64,28 @@ The field bridges history, mathematics, evolutionary theory, and complex systems
 * *Collective Action Problems*: Model cooperation challenges in state building
 * *Institutional Development*: Track state-building trajectories
 
-=== Model Fitting & Estimation (v0.2.0)
+=== Spatial Models (v1.0.0)
+
+* *Instability Diffusion*: Multi-region model of instability spreading across borders
+* *Territorial Competition*: Lotka-Volterra style state competition over territory
+* *Frontier Formation*: Meta-ethnic frontier index (Turchin's frontier thesis)
+
+=== Model Fitting & Estimation
 
 * *Malthusian Fitting*: Recover growth rate and carrying capacity from observed population data
 * *DST Fitting*: Fit full demographic-structural model to historical time series
 * *Parameter Estimation*: Generic model fitting with bootstrap confidence intervals
 * *Seshat Integration*: Load and analyze data from the Seshat Global History Databank
 
-=== Plotting (v0.2.0)
+=== Bayesian Inference (v1.0.0)
+
+Requires `using Turing` (loaded as package extension):
+
+* *Bayesian Malthusian*: MCMC posterior estimation for growth parameters
+* *Bayesian DST*: Full Bayesian fit of demographic-structural model
+* *Model Comparison*: WAIC-based model selection
+
+=== Plotting
 
 Plot recipes for Plots.jl via package extension (loaded automatically when `using Plots`):
 

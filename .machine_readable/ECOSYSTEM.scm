@@ -27,9 +27,11 @@
     (inspiration "Seshat Global History Databank" "Empirical historical datasets")
     (inspiration "Peter Turchin's work" "Demographic-structural theory")
     (inspiration "Jack Goldstone's work" "State breakdown and revolution theory")
-    (potential-integration "Turing.jl" "Bayesian parameter inference")
-    (potential-integration "Plots.jl" "Visualization of model outputs")
-    (potential-integration "Documenter.jl" "Interactive documentation"))
+    (weak-dependency "Turing.jl" "Bayesian parameter inference via package extension")
+    (weak-dependency "RecipesBase.jl" "Plot recipes via package extension")
+    (weak-dependency "Distributions.jl" "Probability distributions for Bayesian models")
+    (weak-dependency "MCMCChains.jl" "MCMC chain analysis for Bayesian extension")
+    (integration "Documenter.jl" "Interactive documentation with GitHub Pages deployment"))
 
   (what-this-is
     "Cliodynamics.jl is a Julia library for applying mathematical and computational methods to "

@@ -400,4 +400,75 @@ using Statistics
         @test_throws ArgumentError load_seshat_csv("/nonexistent/file.csv")
     end
 
+    @testset "Spatial Instability Diffusion" begin
+        regions = [
+            (name=:Rome, psi0=0.8, growth_rate=0.05),
+            (name=:Gaul, psi0=0.2, growth_rate=0.03),
+            (name=:Egypt, psi0=0.1, growth_rate=0.02)
+        ]
+        adjacency = [0.0 1.0 0.5;
+                      1.0 0.0 0.0;
+                      0.5 0.0 0.0]
+
+        result = spatial_instability_diffusion(regions, adjacency,
+                                               diffusion_rate=0.1, tspan=(0.0, 50.0))
+
+        # Test output structure
+        @test length(result.t) > 0
+        @test size(result.psi, 2) == 3
+        @test length(result.regions) == 3
+        @test result.regions == ["Rome", "Gaul", "Egypt"]
+
+        # Test that high-PSI Rome diffuses instability to neighbors
+        # Gaul (connected to Rome) should have higher PSI than Egypt (weakly connected)
+        @test result.psi[end, 2] > result.psi[1, 2]  # Gaul PSI increases
+
+        # Test dimension mismatch error
+        @test_throws ArgumentError spatial_instability_diffusion(
+            regions, zeros(2, 2), diffusion_rate=0.1)
+    end
+
+    @testset "Territorial Competition Model" begin
+        states = [
+            (name=:StateA, territory0=100.0, military=1.0, growth_rate=0.02),
+            (name=:StateB, territory0=80.0, military=1.5, growth_rate=0.01),
+            (name=:StateC, territory0=50.0, military=0.5, growth_rate=0.03)
+        ]
+
+        result = territorial_competition_model(states, tspan=(0.0, 100.0))
+
+        # Test output structure
+        @test length(result.t) > 0
+        @test size(result.territory, 2) == 3
+        @test result.states == ["StateA", "StateB", "StateC"]
+
+        # Test that all territories remain non-negative
+        @test all(result.territory .>= -1.0)  # Small numerical tolerance
+    end
+
+    @testset "Frontier Formation Index" begin
+        # 3 groups with varying cultural distances
+        distances = [0.0 0.8 0.3;
+                     0.8 0.0 0.9;
+                     0.3 0.9 0.0]
+        populations = [1000.0, 500.0, 800.0]
+        territories = [100.0, 80.0, 120.0]
+
+        index = frontier_formation_index(distances, populations, territories)
+
+        # Test output
+        @test length(index) == 3
+        @test all(0.0 .<= index .<= 1.0)
+
+        # Group at highest cultural frontier should have highest index
+        # Group 2 (high distance to both others) should score high
+        @test maximum(index) > 0.5
+
+        # Test dimension mismatch
+        @test_throws ArgumentError frontier_formation_index(
+            zeros(2, 2), populations, territories)
+        @test_throws ArgumentError frontier_formation_index(
+            distances, populations, [1.0, 2.0])
+    end
+
 end

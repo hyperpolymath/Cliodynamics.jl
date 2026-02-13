@@ -95,6 +95,12 @@ export fit_malthusian, fit_demographic_structural, estimate_parameters
 # Export Seshat data integration
 export load_seshat_csv, prepare_seshat_data
 
+# Export Bayesian inference (requires Turing.jl extension)
+export bayesian_malthusian, bayesian_dst, bayesian_model_comparison
+
+# Export spatial models
+export spatial_instability_diffusion, territorial_competition_model, frontier_formation_index
+
 
 # ============================================================================
 # Type Definitions
@@ -1239,6 +1245,179 @@ function prepare_seshat_data(raw::DataFrame; polity::String="")
     end
 
     return data
+end
+
+# ============================================================================
+# Extension Stubs (implemented in package extensions)
+# ============================================================================
+
+"""
+    bayesian_malthusian(years, population; n_samples=1000, n_chains=4, priors=nothing)
+
+Bayesian parameter estimation for the Malthusian model. Requires `using Turing`.
+"""
+function bayesian_malthusian end
+
+"""
+    bayesian_dst(data::DataFrame; n_samples=500, n_chains=4, priors=nothing)
+
+Bayesian parameter estimation for the DST model. Requires `using Turing`.
+"""
+function bayesian_dst end
+
+"""
+    bayesian_model_comparison(chains, names)
+
+Compare Bayesian models via WAIC. Requires `using Turing`.
+"""
+function bayesian_model_comparison end
+
+"""
+    spatial_instability_diffusion(regions, adjacency; diffusion_rate=0.1, tspan=(0.0, 100.0))
+
+Model instability diffusion across connected regions.
+
+Each region has its own PSI dynamics, with instability spreading to
+neighbors via a diffusion term proportional to the PSI difference.
+
+# Arguments
+- `regions::Vector{NamedTuple}`: Region parameters, each with `:name`, `:psi0` (initial PSI), `:growth_rate`
+- `adjacency::Matrix{Float64}`: Adjacency/connectivity matrix (symmetric, 0-1)
+- `diffusion_rate::Float64`: Rate of instability diffusion between neighbors (default: 0.1)
+- `tspan::Tuple`: Time span for simulation
+
+# Returns
+NamedTuple with:
+- `t::Vector{Float64}`: Time points
+- `psi::Matrix{Float64}`: PSI values (rows=time, cols=regions)
+- `regions::Vector{String}`: Region names
+"""
+function spatial_instability_diffusion(regions::Vector, adjacency::Matrix{Float64};
+                                        diffusion_rate::Float64=0.1,
+                                        tspan::Tuple=(0.0, 100.0))
+    n = length(regions)
+    size(adjacency) == (n, n) || throw(ArgumentError("Adjacency matrix must be $n × $n"))
+
+    # Initial PSI values
+    psi0 = [r.psi0 for r in regions]
+    growth_rates = [r.growth_rate for r in regions]
+    names = [string(r.name) for r in regions]
+
+    function diffusion_ode!(du, u, p, t)
+        rates, adj, diff_rate = p
+        for i in 1:n
+            # Local PSI growth (logistic)
+            du[i] = rates[i] * u[i] * (1.0 - u[i])
+            # Diffusion from neighbors
+            for j in 1:n
+                if adj[i,j] > 0.0
+                    du[i] += diff_rate * adj[i,j] * (u[j] - u[i])
+                end
+            end
+        end
+    end
+
+    prob = ODEProblem(diffusion_ode!, psi0, tspan, (growth_rates, adjacency, diffusion_rate))
+    sol = solve(prob, Tsit5(), saveat=1.0)
+
+    psi_matrix = reduce(hcat, sol.u)'  # rows=time, cols=regions
+    return (t = sol.t, psi = Matrix(psi_matrix), regions = names)
+end
+
+"""
+    territorial_competition_model(states; tspan=(0.0, 200.0))
+
+Model Lotka-Volterra style territorial competition between states.
+
+States compete for territory proportional to their military capacity,
+which depends on population, state capacity, and technology.
+
+# Arguments
+- `states::Vector{NamedTuple}`: Each with `:name`, `:territory0`, `:military`, `:growth_rate`
+- `tspan::Tuple`: Simulation time span
+
+# Returns
+NamedTuple with:
+- `t::Vector{Float64}`: Time points
+- `territory::Matrix{Float64}`: Territory (rows=time, cols=states)
+- `states::Vector{String}`: State names
+"""
+function territorial_competition_model(states::Vector; tspan::Tuple=(0.0, 200.0))
+    n = length(states)
+    territory0 = Float64[s.territory0 for s in states]
+    military = Float64[s.military for s in states]
+    growth = Float64[s.growth_rate for s in states]
+    names = [string(s.name) for s in states]
+
+    total_territory = sum(territory0)
+
+    function competition_ode!(du, u, p, t)
+        g, mil, T = p
+        total_mil = sum(mil[i] * u[i] for i in 1:n)
+        for i in 1:n
+            # Growth limited by available territory
+            available = T - sum(u)
+            share = mil[i] * u[i] / (total_mil + 1e-10)
+            du[i] = g[i] * u[i] * (available / T) + share * available * 0.01
+            # Competition loss to stronger states
+            for j in 1:n
+                i == j && continue
+                if mil[j] > mil[i]
+                    du[i] -= 0.001 * (mil[j] - mil[i]) * u[i] * u[j] / T
+                end
+            end
+        end
+    end
+
+    prob = ODEProblem(competition_ode!, territory0, tspan, (growth, military, total_territory))
+    sol = solve(prob, Tsit5(), saveat=1.0)
+
+    territory_matrix = reduce(hcat, sol.u)'
+    return (t = sol.t, territory = Matrix(territory_matrix), states = names)
+end
+
+"""
+    frontier_formation_index(cultural_distances, populations, territories)
+
+Compute the meta-ethnic frontier formation index.
+
+Based on Turchin's theory that states form most readily at boundaries
+between culturally distinct groups (meta-ethnic frontiers).
+
+# Arguments
+- `cultural_distances::Matrix{Float64}`: Pairwise cultural distance between groups
+- `populations::Vector{Float64}`: Population of each group
+- `territories::Vector{Float64}`: Territory of each group
+
+# Returns
+`Vector{Float64}`: Frontier formation index for each group (higher = more likely to form a state)
+"""
+function frontier_formation_index(cultural_distances::Matrix{Float64},
+                                   populations::Vector{Float64},
+                                   territories::Vector{Float64})
+    n = length(populations)
+    size(cultural_distances) == (n, n) || throw(ArgumentError("Distance matrix must be $n × $n"))
+    length(territories) == n || throw(ArgumentError("territories must have $n elements"))
+
+    index = zeros(n)
+    for i in 1:n
+        # Frontier pressure = sum of cultural distance × neighbor population density
+        for j in 1:n
+            i == j && continue
+            neighbor_density = populations[j] / max(territories[j], 1.0)
+            index[i] += cultural_distances[i,j] * neighbor_density
+        end
+        # Scale by own population (larger groups can mobilize more)
+        index[i] *= populations[i] / max(sum(populations), 1.0)
+    end
+
+    # Normalize to [0, 1]
+    max_idx = maximum(index)
+    if max_idx > 0
+        index ./= max_idx
+    end
+
+    return index
 end
 
 end # module Cliodynamics

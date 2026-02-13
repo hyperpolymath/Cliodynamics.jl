@@ -2,13 +2,17 @@
 
 ## Overview
 
-Cliodynamics.jl is a Julia package for quantitative modeling of historical dynamics, implementing Peter Turchin's cliodynamic theories including demographic-structural theory, elite overproduction indices, and secular cycle analysis.
+Cliodynamics.jl is a Julia package for quantitative modeling of historical dynamics, implementing Peter Turchin's cliodynamic theories including demographic-structural theory, elite overproduction indices, secular cycle analysis, spatial models, and Bayesian inference.
 
 ## Project Structure
 
-- **src/Cliodynamics.jl** - Single-file module implementation (deliberate architectural decision)
-- **test/runtests.jl** - Comprehensive test suite with @testset structure
-- **examples/** - Julia usage examples (basic_usage.jl, historical_analysis.jl)
+- **src/Cliodynamics.jl** - Single-file module implementation (deliberate architectural decision — ADR-002)
+- **ext/CliodynamicsPlotsExt.jl** - Plots.jl recipe extension (5 plot types)
+- **ext/CliodynamicsTuringExt.jl** - Turing.jl Bayesian inference extension
+- **test/runtests.jl** - 124 tests across 18 testsets
+- **examples/** - Usage examples (basic_usage.jl, historical_analysis.jl, publication_examples.jl)
+- **docs/** - Documenter.jl documentation (10 pages)
+- **data/seshat_sample.csv** - Synthetic Seshat-format historical data
 - **ffi/zig/** - Zig FFI implementation following Idris2 ABI
 - **src/abi/** - Idris2 ABI definitions with formal proofs
 
@@ -18,15 +22,17 @@ Cliodynamics.jl is a Julia package for quantitative modeling of historical dynam
 # Install dependencies
 julia --project=. -e 'using Pkg; Pkg.instantiate()'
 
-# Run tests
+# Run tests (124 tests)
 julia --project=. -e 'using Pkg; Pkg.test()'
 
 # Run examples
-julia --project=examples examples/basic_usage.jl
-julia --project=examples examples/historical_analysis.jl
+julia --project=. examples/basic_usage.jl
+julia --project=. examples/historical_analysis.jl
+julia --project=. examples/publication_examples.jl
 
-# Interactive REPL
-julia --project=.
+# Build documentation
+julia --project=docs -e 'using Pkg; Pkg.develop(PackageSpec(path=pwd())); Pkg.instantiate()'
+julia --project=docs docs/make.jl
 ```
 
 ## Code Style
@@ -37,102 +43,73 @@ julia --project=.
 - Use CamelCase for types
 - Document all exported functions with docstrings
 - Include `@testset` for all test groups
-- Use `@test` with descriptive error messages
+- Use `Base.@kwdef` for structs with keyword constructors
 
 ### Mathematical Functions
-- All models return vectors (time series data)
+- ODE models return DifferentialEquations.jl solutions (interpolate via `sol(t)[i]`)
 - Parameters follow academic literature conventions
 - Use keyword arguments for optional parameters
 - Validate inputs at function boundaries
 
-### Example Docstring Format
-```julia
-"""
-    malthusian_model(r::Real, K::Real, P0::Real, t::AbstractVector{<:Real})
-
-Simulate Malthusian population dynamics.
-
-# Arguments
-- `r`: Natural growth rate (per capita)
-- `K`: Carrying capacity
-- `P0`: Initial population
-- `t`: Time vector
-
-# Returns
-Population vector over time
-"""
-```
-
 ## Architecture
 
 ### Single-File Design (ADR-002)
-The entire implementation is in `src/Cliodynamics.jl` (not split into modules). This is intentional:
-- Simplifies maintenance
-- Clear dependency graph
-- Easy to audit
-- Standard Julia package practice for focused libraries
+The core implementation is in `src/Cliodynamics.jl`. Optional features use Julia package extensions:
+- `CliodynamicsPlotsExt` (loaded with `using Plots`) — plot recipes
+- `CliodynamicsTuringExt` (loaded with `using Turing`) — Bayesian inference
 
-### Mathematical Models
-- **Malthusian dynamics** - Population growth with carrying capacity
-- **Demographic-Structural Theory (DST)** - Elite competition and social instability
-- **Elite Overproduction Index (EOI)** - Ratio of elite aspirants to elite positions
-- **Political Stress Indicator (PSI)** - Combined measure of multiple stressors
-- **Secular cycles** - Long-term oscillations in state capacity
-
-### Utility Functions
-- Moving average, detrend, normalize, smooth
-- Phase detection for secular cycles
-- Peak detection for instability events
+### 34 Exported Functions
+- **Models**: malthusian_model, demographic_structural_model, state_capacity_model, collective_action_problem
+- **Indicators**: elite_overproduction_index, political_stress_indicator, instability_probability, conflict_intensity, crisis_threshold, instability_events, population_pressure, carrying_capacity_estimate
+- **Cycles**: secular_cycle_analysis, detect_cycle_phases
+- **Fitting**: fit_malthusian, fit_demographic_structural, estimate_parameters
+- **Data**: load_seshat_csv, prepare_seshat_data
+- **Spatial**: spatial_instability_diffusion, territorial_competition_model, frontier_formation_index
+- **Bayesian** (extension): bayesian_malthusian, bayesian_dst, bayesian_model_comparison
+- **Utilities**: moving_average, detrend, normalize_timeseries
+- **Types**: MalthusianParams, DemographicStructuralParams, StateCapacityParams, SecularCyclePhase, InstabilityEvent
 
 ## Dependencies
 
-### Core
-- Julia 1.6+
-- LinearAlgebra (stdlib)
-- Statistics (stdlib)
+### Core (required)
+- Julia 1.10+
+- DifferentialEquations.jl 7 — ODE solvers
+- DataFrames.jl 1 — tabular data
+- Optim.jl 1 — parameter estimation
+- LinearAlgebra, Statistics (stdlib)
 
-### Optional (for examples)
-- DataFrames.jl - Time series manipulation
-- DifferentialEquations.jl - ODE integration
-- Optim.jl - Parameter estimation
-
-### Removed Dependencies
-- Plots.jl removed to reduce package load (users import separately)
+### Optional (weak dependencies)
+- RecipesBase.jl 1 — plot recipes (via Plots.jl)
+- Turing.jl 0.30-0.35 — Bayesian inference
+- Distributions.jl 0.25 — probability distributions
+- MCMCChains.jl 6 — MCMC chain analysis
 
 ## Testing
 
-Run full test suite:
-```bash
-julia --project=. -e 'using Pkg; Pkg.test()'
-```
-
-Tests validate:
-- Mathematical correctness of all models
-- Edge cases (zero population, single data points, etc.)
-- Numerical stability
-- Type stability
-- Exported function availability
+124 tests across 18 testsets covering:
+- All mathematical models (correctness, edge cases)
+- Spatial models (diffusion, competition, frontier)
+- Model fitting and parameter estimation
+- Seshat data loading and preparation
+- Utility functions
 
 ## Common Workflows
 
 ### Adding a New Model
 1. Add function to `src/Cliodynamics.jl`
-2. Export function in module header
+2. Add `export` in module header
 3. Add comprehensive docstring
-4. Create `@testset` in `test/runtests.jl`
-5. Update ROADMAP.adoc and STATE.scm
-6. Run tests to verify
+4. Add `@testset` in `test/runtests.jl`
+5. Add `@docs` block in relevant `docs/src/*.md`
+6. Update STATE.scm
+7. Run tests to verify
 
 ### Updating Documentation
 - Update docstrings in source
-- Update ROADMAP.adoc for milestones
+- Update `docs/src/*.md` pages
 - Update STATE.scm for completion tracking
 - Update examples/ if API changes
-
-### Integration Points
-- **Seshat Global History Databank** - Empirical data source
-- **DifferentialEquations.jl** - For ODE versions of models
-- **Turing.jl** - For Bayesian parameter inference (planned v1.0)
+- Rebuild docs: `julia --project=docs docs/make.jl`
 
 ## License
 
@@ -148,5 +125,7 @@ All files must have SPDX header:
 - This is a **Julia package**, not Rust/Elixir/ReScript
 - The single-file design is intentional (don't suggest splitting)
 - Mathematical models follow academic literature (cite Turchin if modifying)
-- Test coverage is critical - all exported functions must have tests
+- Test coverage is critical — all exported functions must have tests
 - Examples should work standalone without Plots dependency
+- Bayesian features require `using Turing` (package extension)
+- Spatial models are in core (no extra dependencies beyond DifferentialEquations)
