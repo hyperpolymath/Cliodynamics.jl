@@ -19,7 +19,7 @@ K9!
       name = "cliodynamics-metadata",
       version = "1.0.0",
       description = "Cliodynamics.jl package metadata and configuration data",
-      author = "Jonathan D.A. Jewell <jonathan.jewell@open.ac.uk>",
+      author = "Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>",
     },
   },
 
