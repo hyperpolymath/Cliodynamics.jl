@@ -101,13 +101,13 @@ The core implementation is in `src/Cliodynamics.jl`. Optional features use Julia
 3. Add comprehensive docstring
 4. Add `@testset` in `test/runtests.jl`
 5. Add `@docs` block in relevant `docs/src/*.md`
-6. Update STATE.scm
+6. Update .machine_readable/6a2/STATE.a2ml
 7. Run tests to verify
 
 ### Updating Documentation
 - Update docstrings in source
 - Update `docs/src/*.md` pages
-- Update STATE.scm for completion tracking
+- Update .machine_readable/6a2/STATE.a2ml for completion tracking
 - Update examples/ if API changes
 - Rebuild docs: `julia --project=docs docs/make.jl`
 
