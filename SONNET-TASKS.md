@@ -73,15 +73,15 @@ echo "PASS" || echo "FAIL"
 - `/var/mnt/eclipse/repos/Cliodynamics.jl/.machine_readable/META.scm` (line 1)
 - `/var/mnt/eclipse/repos/Cliodynamics.jl/.machine_readable/ECOSYSTEM.scm` (line 1)
 
-**Problem:** STATE.scm, META.scm, and ECOSYSTEM.scm all have `AGPL-3.0-or-later` as their
+**Problem:** STATE.scm, META.scm, and ECOSYSTEM.scm all have `PMPL-1.0-or-later` as their
 SPDX identifier. Per CLAUDE.md license policy, AGPL-3.0 must NEVER be used. All hyperpolymath
 original code uses `PMPL-1.0-or-later`. AGENTIC.scm, NEUROSYM.scm, and PLAYBOOK.scm already
 have the correct header.
 
 **What to do:**
-1. In `STATE.scm` line 1: change `AGPL-3.0-or-later` to `PMPL-1.0-or-later`.
-2. In `META.scm` line 1: change `AGPL-3.0-or-later` to `PMPL-1.0-or-later`.
-3. In `ECOSYSTEM.scm` line 1: change `AGPL-3.0-or-later` to `PMPL-1.0-or-later`.
+1. In `STATE.scm` line 1: change `PMPL-1.0-or-later` to `PMPL-1.0-or-later`.
+2. In `META.scm` line 1: change `PMPL-1.0-or-later` to `PMPL-1.0-or-later`.
+3. In `ECOSYSTEM.scm` line 1: change `PMPL-1.0-or-later` to `PMPL-1.0-or-later`.
 
 **Verification:**
 ```bash
@@ -103,9 +103,9 @@ grep -c "PMPL-1.0-or-later" STATE.scm META.scm ECOSYSTEM.scm AGENTIC.scm NEUROSY
 Must be `PMPL-1.0-or-later`.
 
 **What to do:**
-1. In `ffi/zig/src/main.zig` line 6: change `AGPL-3.0-or-later` to `PMPL-1.0-or-later`.
-2. In `ffi/zig/build.zig` line 2: change `AGPL-3.0-or-later` to `PMPL-1.0-or-later`.
-3. In `ffi/zig/test/integration_test.zig` line 2: change `AGPL-3.0-or-later` to `PMPL-1.0-or-later`.
+1. In `ffi/zig/src/main.zig` line 6: change `PMPL-1.0-or-later` to `PMPL-1.0-or-later`.
+2. In `ffi/zig/build.zig` line 2: change `PMPL-1.0-or-later` to `PMPL-1.0-or-later`.
+3. In `ffi/zig/test/integration_test.zig` line 2: change `PMPL-1.0-or-later` to `PMPL-1.0-or-later`.
 
 **Verification:**
 ```bash
