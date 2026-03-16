@@ -99,7 +99,7 @@ grep -c "PMPL-1.0-or-later" STATE.scm META.scm ECOSYSTEM.scm AGENTIC.scm NEUROSY
 - `/var/mnt/eclipse/repos/Cliodynamics.jl/ffi/zig/build.zig` (line 2)
 - `/var/mnt/eclipse/repos/Cliodynamics.jl/ffi/zig/test/integration_test.zig` (line 2)
 
-**Problem:** All three Zig files have `SPDX-License-Identifier: AGPL-3.0-or-later`.
+**Problem:** All three Zig files have `SPDX-License-Identifier: PMPL-1.0-or-later`.
 Must be `PMPL-1.0-or-later`.
 
 **What to do:**
