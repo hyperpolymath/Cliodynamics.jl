@@ -80,3 +80,4 @@ htmlcov/
 *.tmp
 *.bak
 sync_report_*.txt
+SONNET-TASKS.md
