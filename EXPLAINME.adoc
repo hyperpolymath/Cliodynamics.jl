@@ -1,42 +1,185 @@
 // SPDX-License-Identifier: PMPL-1.0-or-later
+// Copyright (c) 2026 Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
 = Cliodynamics.jl — Show Me The Receipts
 :toc:
+:toclevels: 3
 :icons: font
 
-The README makes claims. This file backs them up.
+The README makes claims. This file backs them up with specific code locations,
+honest caveats, and enough detail for an external reviewer to orient themselves.
 
-[quote, README]
-____
-A Julia library for mathematical modeling and statistical analysis of historical dynamics.
-____
+== README Claims — Verified
 
-== Technology Choices
+=== Claim 1: "Implements Peter Turchin's Demographic-Structural Theory as a coupled ODE model"
 
-[cols="1,2"]
-|===
-| Technology | Learn More
+*True.* `src/Cliodynamics.jl` exports `demographic_structural_model/2`, accepting
+a `DemographicStructuralParams` struct with fields `r` (growth rate), `K`
+(carrying capacity), `w` (elite wage premium), `δ` (elite recruitment rate),
+`ε` (state extraction), and initial conditions `N0`, `E0`, `S0`.
 
-| **Zig** | https://ziglang.org
-| **Julia** | https://julialang.org
-| **Idris2 ABI** | https://www.idris-lang.org
-|===
+The ODE system couples three state variables — population `N`, elite count `E`,
+and state capacity `S` — and is solved via DifferentialEquations.jl. The test
+suite verifies that initial conditions are reproduced exactly at t=0, that all
+three variables remain non-negative throughout the integration, and that the
+model approaches the known analytical steady state for the Malthusian sub-model.
+
+*Caveat:* ODE solutions return a DifferentialEquations.jl `ODESolution` object;
+callers must interpolate via `sol(t)[i]` to extract intermediate values. This is
+Julia-idiomatic but non-obvious to newcomers.
+
+=== Claim 2: "Political Stress Indicator (PSI) — composite measure for state breakdown prediction"
+
+*True.* `political_stress_indicator/1` is exported and combines population
+pressure, elite overproduction index, and state fiscal stress into a single
+composite score. `instability_probability/1` converts the PSI to a probability
+using a sigmoid transform. `crisis_threshold/1` identifies when PSI exceeds
+a configurable threshold. `instability_events/1` extracts discrete events
+from a PSI time-series.
+
+*Caveat:* The weighting coefficients in the PSI formula encode Turchin's empirical
+calibration against medieval European data. Applying these weights directly to
+non-European or pre-modern contexts may require recalibration via
+`estimate_parameters`.
+
+=== Claim 3: "Secular cycle analysis — 150–300 year oscillation detection"
+
+*True.* `secular_cycle_analysis/2` (with `window` parameter) performs
+trend-cycle decomposition and returns a `SecularCyclePhase` enum sequence.
+`detect_cycle_phases/1` identifies the four canonical phases: expansion,
+stagflation, crisis, and depression/intercycle. The function uses `detrend`,
+`moving_average`, and spectral analysis internals.
+
+== How It Works
+
+The package follows a deliberate single-file design (ADR-002 in CLAUDE.md):
+the entire core is in `src/Cliodynamics.jl`. Optional features are loaded via
+Julia package extensions:
+
+* `ext/CliodynamicsPlotsExt.jl` — five Plots.jl recipe types (load with
+  `using Plots`) for visualising population/elite/stability trajectories and
+  cycle phase diagrams
+* `ext/CliodynamicsTuringExt.jl` — Bayesian inference extensions
+  (`bayesian_malthusian`, `bayesian_dst`, `bayesian_model_comparison`) using
+  Turing.jl MCMC
+
+The export surface is 34 names across seven functional groups: ODE models,
+stability indicators, cycle analysis, model fitting (`fit_malthusian`,
+`fit_demographic_structural`, `estimate_parameters`), Seshat data loading
+(`load_seshat_csv`, `prepare_seshat_data`), spatial models
+(`spatial_instability_diffusion`, `territorial_competition_model`,
+`frontier_formation_index`), and utility functions
+(`moving_average`, `detrend`, `normalize_timeseries`).
+
+== Honest Caveats
+
+* The `bayesian_*` exports are only available when `Turing` is loaded; the
+  package extension pattern means callers must explicitly `using Turing` or
+  they will get a `MethodError` on these functions.
+* Spatial diffusion models (`spatial_instability_diffusion`) are computationally
+  intensive for large grids; no GPU acceleration is wired despite the presence
+  of Idris2 ABI and Zig FFI stubs.
+* `data/seshat_sample.csv` is synthetic, not real Seshat Codebook data.
+  Results on this file should not be interpreted as historical findings.
+* The completion badge shows 100% but reflects structural completeness, not
+  validation against published historical time series.
 
 == Dogfooded Across The Account
 
-Uses the hyperpolymath ABI/FFI standard (Idris2 + Zig). Same pattern used across
-https://github.com/hyperpolymath/proven[proven],
-https://github.com/hyperpolymath/burble[burble], and
-https://github.com/hyperpolymath/gossamer[gossamer].
+[cols="2,3"]
+|===
+| Where | How Cliodynamics is relevant
+
+| https://github.com/hyperpolymath/developer-ecosystem[developer-ecosystem]
+  `julia-ecosystem/`
+| Cliodynamics uses DifferentialEquations.jl, a flagship Julia scientific
+  computing dependency, demonstrating the Julia ecosystem's ODE-solving strengths
+  in the hyperpolymath Julia showcase.
+
+| https://github.com/hyperpolymath/statistease[statistease]
+| Statistease provides statistical utilities (regression, decomposition) that
+  complement Cliodynamics's `estimate_parameters` and `secular_cycle_analysis`.
+
+| https://github.com/hyperpolymath/Cliometrics.jl[Cliometrics.jl]
+| The two packages are sister tools: Cliodynamics models historical dynamics
+  via ODEs; Cliometrics quantifies economic history via data analysis. Combined
+  they cover the full Turchin-Maddison research programme.
+
+| https://github.com/hyperpolymath/Causals.jl[Causals.jl]
+| Causals.jl's `granger_test` can test whether Cliodynamics model outputs
+  (e.g., PSI time series) Granger-cause observed instability event counts.
+
+| https://github.com/hyperpolymath/hypatia[hypatia]
+| Hypatia CI scans Cliodynamics.jl for SPDX compliance and workflow standards
+  on every push.
+|===
 
 == File Map
 
-[cols="1,2"]
+[cols="2,3"]
 |===
-| Path | What's There
+| Path | What is There
 
-| `src/` | Source code
-| `ffi/` | Foreign function interface
-| `test(s)/` | Test suite
+| `src/Cliodynamics.jl`
+| Entire package core (deliberate single-file design per ADR-002). Types:
+  `MalthusianParams`, `DemographicStructuralParams`, `StateCapacityParams`,
+  `SecularCyclePhase`, `InstabilityEvent`. 34 exported functions covering ODE
+  models, instability indicators, secular cycles, model fitting, spatial models,
+  Seshat I/O, and utility functions.
+
+| `src/abi/`
+| Idris2 ABI definitions directory — currently scaffolded.
+
+| `ext/CliodynamicsPlotsExt.jl`
+| Plots.jl package extension: 5 plot recipe types for ODE solution visualisation,
+  PSI trajectories, cycle phase diagrams, and spatial diffusion maps. Loaded
+  automatically when `using Plots` is in scope.
+
+| `ext/CliodynamicsTuringExt.jl`
+| Turing.jl package extension: Bayesian parameter inference for Malthusian and
+  DST models via MCMC. Exports `bayesian_malthusian`, `bayesian_dst`,
+  `bayesian_model_comparison`. Loaded when `using Turing` is in scope.
+
+| `test/runtests.jl`
+| 124 tests across 18 testsets covering all ODE models, spatial models,
+  model fitting, Seshat data loading, and utility functions. Tests verify
+  initial conditions, non-negativity invariants, carrying-capacity convergence,
+  and known analytical solutions for the Malthusian sub-model.
+
+| `benches/benchmarks.jl`
+| BenchmarkTools suite for ODE integration (Malthusian and DST models at varying
+  time spans), PSI computation, and secular cycle detection.
+
+| `data/seshat_sample.csv`
+| Synthetic Seshat-format historical data for testing `load_seshat_csv` and
+  `prepare_seshat_data` without requiring the real (proprietary) Seshat Codebook.
+
+| `examples/basic_usage.jl`
+| Standalone example: Malthusian model, elite overproduction index, PSI
+  calculation. Runs without Plots dependency.
+
+| `examples/historical_analysis.jl`
+| Longer example combining DST model fitting to synthetic data with secular
+  cycle detection and PSI time series.
+
+| `examples/publication_examples.jl`
+| Publication-quality analysis examples following Turchin (2016) methodology.
+
+| `docs/`
+| Documenter.jl documentation source (10 pages covering all module sections).
+
+| `ffi/zig/`
+| Zig FFI structural stub — not yet operative.
+
+| `Project.toml`
+| Name `Cliodynamics`, v1.0.0, MPL-2.0; core deps: `DifferentialEquations`,
+  `Statistics`, `LinearAlgebra`, `Optim`, `DataFrames`; weak deps (extensions):
+  `RecipesBase`, `Turing`, `Distributions`, `MCMCChains`.
+
+| `contractiles/`
+| Contractile interface definitions (RSR interoperability standard).
+
+| `stapeln.toml`
+| Stapeln container configuration for reproducible build environment.
 |===
 
 == Questions?
