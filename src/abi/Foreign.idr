@@ -1,5 +1,5 @@
--- SPDX-License-Identifier: PMPL-1.0-or-later
-||| Foreign Function Interface Declarations
+||| SPDX-License-Identifier: PMPL-1.0-or-later
+||| Foreign Function Interface Declarations for CLIODYNAMICS.JL
 |||
 ||| This module declares all C-compatible functions that will be
 ||| implemented in the Zig FFI layer.
@@ -7,10 +7,10 @@
 ||| All functions are declared here with type signatures and safety proofs.
 ||| Implementations live in ffi/zig/
 
-module Cliodynamics.ABI.Foreign
+module Cliodynamics.jl.ABI.Foreign
 
-import Cliodynamics.ABI.Types
-import Cliodynamics.ABI.Layout
+import Cliodynamics.jl.ABI.Types
+import Cliodynamics.jl.ABI.Layout
 
 %default total
 
@@ -21,7 +21,7 @@ import Cliodynamics.ABI.Layout
 ||| Initialize the library
 ||| Returns a handle to the library instance, or Nothing on failure
 export
-%foreign "C:cliodynamics_init, libcliodynamics"
+%foreign "C:Cliodynamics.jl_init, libCliodynamics.jl"
 prim__init : PrimIO Bits64
 
 ||| Safe wrapper for library initialization
@@ -33,7 +33,7 @@ init = do
 
 ||| Clean up library resources
 export
-%foreign "C:cliodynamics_free, libcliodynamics"
+%foreign "C:Cliodynamics.jl_free, libCliodynamics.jl"
 prim__free : Bits64 -> PrimIO ()
 
 ||| Safe wrapper for cleanup
@@ -47,7 +47,7 @@ free h = primIO (prim__free (handlePtr h))
 
 ||| Example operation: process data
 export
-%foreign "C:cliodynamics_process, libcliodynamics"
+%foreign "C:Cliodynamics.jl_process, libCliodynamics.jl"
 prim__process : Bits64 -> Bits32 -> PrimIO Bits32
 
 ||| Safe wrapper with error handling
@@ -70,12 +70,12 @@ prim__getString : Bits64 -> String
 
 ||| Free C string
 export
-%foreign "C:cliodynamics_free_string, libcliodynamics"
+%foreign "C:Cliodynamics.jl_free_string, libCliodynamics.jl"
 prim__freeString : Bits64 -> PrimIO ()
 
 ||| Get string result from library
 export
-%foreign "C:cliodynamics_get_string, libcliodynamics"
+%foreign "C:Cliodynamics.jl_get_string, libCliodynamics.jl"
 prim__getResult : Bits64 -> PrimIO Bits64
 
 ||| Safe string getter
@@ -96,7 +96,7 @@ getString h = do
 
 ||| Process array data
 export
-%foreign "C:cliodynamics_process_array, libcliodynamics"
+%foreign "C:Cliodynamics.jl_process_array, libCliodynamics.jl"
 prim__processArray : Bits64 -> Bits64 -> Bits32 -> PrimIO Bits32
 
 ||| Safe array processor
@@ -123,7 +123,7 @@ processArray h buf len = do
 
 ||| Get last error message
 export
-%foreign "C:cliodynamics_last_error, libcliodynamics"
+%foreign "C:Cliodynamics.jl_last_error, libCliodynamics.jl"
 prim__lastError : PrimIO Bits64
 
 ||| Retrieve last error as string
@@ -150,7 +150,7 @@ errorDescription NullPointer = "Null pointer"
 
 ||| Get library version
 export
-%foreign "C:cliodynamics_version, libcliodynamics"
+%foreign "C:Cliodynamics.jl_version, libCliodynamics.jl"
 prim__version : PrimIO Bits64
 
 ||| Get version as string
@@ -162,7 +162,7 @@ version = do
 
 ||| Get library build info
 export
-%foreign "C:cliodynamics_build_info, libcliodynamics"
+%foreign "C:Cliodynamics.jl_build_info, libCliodynamics.jl"
 prim__buildInfo : PrimIO Bits64
 
 ||| Get build information
@@ -181,16 +181,16 @@ public export
 Callback : Type
 Callback = Bits64 -> Bits32 -> Bits32
 
-||| Register a callback (typed foreign declaration avoids unsafe cast)
+||| Register a callback
 export
-%foreign "C:cliodynamics_register_callback, libcliodynamics"
-prim__registerCallback : Bits64 -> (Bits64 -> Bits32 -> Bits32) -> PrimIO Bits32
+%foreign "C:Cliodynamics.jl_register_callback, libCliodynamics.jl"
+prim__registerCallback : Bits64 -> AnyPtr -> PrimIO Bits32
 
 ||| Safe callback registration
 export
 registerCallback : Handle -> Callback -> IO (Either Result ())
 registerCallback h cb = do
-  result <- primIO (prim__registerCallback (handlePtr h) cb)
+  result <- primIO (prim__registerCallback (handlePtr h) (cast cb))
   pure $ case resultFromInt result of
     Just Ok => Right ()
     Just err => Left err
@@ -206,7 +206,7 @@ registerCallback h cb = do
 
 ||| Check if library is initialized
 export
-%foreign "C:cliodynamics_is_initialized, libcliodynamics"
+%foreign "C:Cliodynamics.jl_is_initialized, libCliodynamics.jl"
 prim__isInitialized : Bits64 -> PrimIO Bits32
 
 ||| Check initialization status

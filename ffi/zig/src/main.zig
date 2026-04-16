@@ -1,4 +1,4 @@
-// Cliodynamics FFI Implementation
+// CLIODYNAMICS.JL FFI Implementation
 //
 // This module implements the C-compatible FFI declared in src/abi/Foreign.idr
 // All types and layouts must match the Idris2 ABI definitions.
@@ -9,7 +9,7 @@ const std = @import("std");
 
 // Version information (keep in sync with project)
 const VERSION = "0.1.0";
-const BUILD_INFO = "Cliodynamics built with Zig " ++ @import("builtin").zig_version_string;
+const BUILD_INFO = "CLIODYNAMICS.JL built with Zig " ++ @import("builtin").zig_version_string;
 
 /// Thread-local error storage
 threadlocal var last_error: ?[]const u8 = null;
@@ -51,7 +51,7 @@ pub const Handle = opaque {
 
 /// Initialize the library
 /// Returns a handle, or null on failure
-export fn cliodynamics_init() ?*Handle {
+export fn Cliodynamics.jl_init() ?*Handle {
     const allocator = std.heap.c_allocator;
 
     const handle = allocator.create(Handle) catch {
@@ -70,7 +70,7 @@ export fn cliodynamics_init() ?*Handle {
 }
 
 /// Free the library handle
-export fn cliodynamics_free(handle: ?*Handle) void {
+export fn Cliodynamics.jl_free(handle: ?*Handle) void {
     const h = handle orelse return;
     const allocator = h.allocator;
 
@@ -86,7 +86,7 @@ export fn cliodynamics_free(handle: ?*Handle) void {
 //==============================================================================
 
 /// Process data (example operation)
-export fn cliodynamics_process(handle: ?*Handle, input: u32) Result {
+export fn Cliodynamics.jl_process(handle: ?*Handle, input: u32) Result {
     const h = handle orelse {
         setError("Null handle");
         return .null_pointer;
@@ -110,7 +110,7 @@ export fn cliodynamics_process(handle: ?*Handle, input: u32) Result {
 
 /// Get a string result (example)
 /// Caller must free the returned string
-export fn cliodynamics_get_string(handle: ?*Handle) ?[*:0]const u8 {
+export fn Cliodynamics.jl_get_string(handle: ?*Handle) ?[*:0]const u8 {
     const h = handle orelse {
         setError("Null handle");
         return null;
@@ -132,7 +132,7 @@ export fn cliodynamics_get_string(handle: ?*Handle) ?[*:0]const u8 {
 }
 
 /// Free a string allocated by the library
-export fn cliodynamics_free_string(str: ?[*:0]const u8) void {
+export fn Cliodynamics.jl_free_string(str: ?[*:0]const u8) void {
     const s = str orelse return;
     const allocator = std.heap.c_allocator;
 
@@ -145,7 +145,7 @@ export fn cliodynamics_free_string(str: ?[*:0]const u8) void {
 //==============================================================================
 
 /// Process an array of data
-export fn cliodynamics_process_array(
+export fn Cliodynamics.jl_process_array(
     handle: ?*Handle,
     buffer: ?[*]const u8,
     len: u32,
@@ -181,7 +181,7 @@ export fn cliodynamics_process_array(
 
 /// Get the last error message
 /// Returns null if no error
-export fn cliodynamics_last_error() ?[*:0]const u8 {
+export fn Cliodynamics.jl_last_error() ?[*:0]const u8 {
     const err = last_error orelse return null;
 
     // Return C string (static storage, no need to free)
@@ -195,12 +195,12 @@ export fn cliodynamics_last_error() ?[*:0]const u8 {
 //==============================================================================
 
 /// Get the library version
-export fn cliodynamics_version() [*:0]const u8 {
+export fn Cliodynamics.jl_version() [*:0]const u8 {
     return VERSION.ptr;
 }
 
 /// Get build information
-export fn cliodynamics_build_info() [*:0]const u8 {
+export fn Cliodynamics.jl_build_info() [*:0]const u8 {
     return BUILD_INFO.ptr;
 }
 
@@ -212,7 +212,7 @@ export fn cliodynamics_build_info() [*:0]const u8 {
 pub const Callback = *const fn (u64, u32) callconv(.C) u32;
 
 /// Register a callback
-export fn cliodynamics_register_callback(
+export fn Cliodynamics.jl_register_callback(
     handle: ?*Handle,
     callback: ?Callback,
 ) Result {
@@ -243,7 +243,7 @@ export fn cliodynamics_register_callback(
 //==============================================================================
 
 /// Check if handle is initialized
-export fn cliodynamics_is_initialized(handle: ?*Handle) u32 {
+export fn Cliodynamics.jl_is_initialized(handle: ?*Handle) u32 {
     const h = handle orelse return 0;
     return if (h.initialized) 1 else 0;
 }
@@ -253,22 +253,22 @@ export fn cliodynamics_is_initialized(handle: ?*Handle) u32 {
 //==============================================================================
 
 test "lifecycle" {
-    const handle = cliodynamics_init() orelse return error.InitFailed;
-    defer cliodynamics_free(handle);
+    const handle = Cliodynamics.jl_init() orelse return error.InitFailed;
+    defer Cliodynamics.jl_free(handle);
 
-    try std.testing.expect(cliodynamics_is_initialized(handle) == 1);
+    try std.testing.expect(Cliodynamics.jl_is_initialized(handle) == 1);
 }
 
 test "error handling" {
-    const result = cliodynamics_process(null, 0);
+    const result = Cliodynamics.jl_process(null, 0);
     try std.testing.expectEqual(Result.null_pointer, result);
 
-    const err = cliodynamics_last_error();
+    const err = Cliodynamics.jl_last_error();
     try std.testing.expect(err != null);
 }
 
 test "version" {
-    const ver = cliodynamics_version();
+    const ver = Cliodynamics.jl_version();
     const ver_str = std.mem.span(ver);
     try std.testing.expectEqualStrings(VERSION, ver_str);
 }
