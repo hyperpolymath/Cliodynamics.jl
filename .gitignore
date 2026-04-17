@@ -81,3 +81,11 @@ htmlcov/
 *.bak
 sync_report_*.txt
 SONNET-TASKS.md
+target/
+node_modules/
+_build/
+deps/
+.elixir_ls/
+.cache/
+build/
+dist/
