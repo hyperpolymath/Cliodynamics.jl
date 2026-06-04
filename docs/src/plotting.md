@@ -1,3 +1,7 @@
+<!--
+SPDX-License-Identifier: MPL-2.0
+Copyright (c) Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
+-->
 # Plotting
 
 Cliodynamics.jl provides plot recipes via a package extension that loads automatically when `Plots.jl` (or `RecipesBase`) is available.
