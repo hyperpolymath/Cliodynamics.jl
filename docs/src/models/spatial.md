@@ -1,3 +1,7 @@
+<!--
+SPDX-License-Identifier: MPL-2.0
+Copyright (c) Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
+-->
 # Spatial Models
 
 Spatial cliodynamic models extend single-polity analysis to multi-region systems where instability, population pressure, and elite competition diffuse across borders.
