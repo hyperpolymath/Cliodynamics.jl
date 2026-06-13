@@ -1,9 +1,37 @@
 # SPDX-License-Identifier: MPL-2.0
 # META.a2ml — Project meta-information
 # Converted from META.scm on 2026-03-15
+# Refreshed: 2026-06-13 (06-12 estate standardization)
 
 [metadata]
 project = "Cliodynamics.jl"
+version = "1.0.0"
 author = "Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>"
 license = "MPL-2.0"
-standard = "RSR 2026"
+standard = "RSR 2026 / 06-12 estate"
+last-updated = "2026-06-13"
+
+[description]
+one-line = "Julia package for quantitative modeling of historical dynamics (Turchin cliodynamics)"
+domain = "Cliodynamics — quantitative history; secular-cycle theory; demographic-structural model"
+theory = "Peter Turchin's cliodynamic theories: demographic-structural theory, elite overproduction, secular cycles, spatial instability"
+
+[architecture]
+design-decision = "ADR-002: single-file core (src/Cliodynamics.jl); optional features via Julia package extensions"
+ode-backend = "DifferentialEquations.jl 7"
+bayesian-backend = "Turing.jl 0.30–0.35 (weak dependency, extension)"
+data-backend = "DataFrames.jl 1"
+optimization = "Optim.jl 1 (parameter estimation)"
+ffi = "Zig FFI implementing Idris2 ABI (ffi/zig/ + src/abi/)"
+
+[repository]
+github = "https://github.com/hyperpolymath/Cliodynamics.jl"
+propagation = "instant-sync.yml → hyperpolymath/.git-private-farm (FARM_DISPATCH_TOKEN)"
+
+[development-practices]
+language-policy = "Julia (hyperpolymath standard); no TypeScript/Python/Go"
+test-gate = "julia --project=. -e 'using Pkg; Pkg.test()' must pass"
+docs-gate = "julia --project=docs docs/make.jl must pass"
+single-file-invariant = "do not split src/Cliodynamics.jl (ADR-002)"
+literature-grounding = "mathematical models must track Turchin et al. with citations"
+spdx = "all files carry SPDX-License-Identifier: MPL-2.0"
