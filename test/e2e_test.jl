@@ -19,7 +19,7 @@ using Statistics
         )
         sol = demographic_structural_model(params, tspan=(0.0, 300.0))
         @test sol.u[1][1] ≈ 500.0
-        @test all(u .>= 0.0 for u in sol.u)
+        @test all(all(u .>= 0.0) for u in sol.u)
 
         # 2. Extract a time series and compute EOI
         years = collect(0.0:10.0:300.0)
