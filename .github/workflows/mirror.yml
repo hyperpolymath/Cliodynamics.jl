@@ -16,9 +16,11 @@ jobs:
         with:
           fetch-depth: 0
       - uses: webfactory/ssh-agent@a6f90b1f127823b31d4d4a8d96047790581349bd # v0.9.1
+        if: ${{ secrets.GITLAB_SSH_KEY != '' }}
         with:
           ssh-private-key: ${{ secrets.GITLAB_SSH_KEY }}
       - name: Mirror to GitLab
+        if: ${{ secrets.GITLAB_SSH_KEY != '' }}
         run: |
           ssh-keyscan -t ed25519 gitlab.com >> ~/.ssh/known_hosts
           git remote add gitlab git@gitlab.com:${{ vars.GITLAB_ORG || vars.MIRROR_ORG || github.repository_owner }}/${{ github.event.repository.name }}.git || true
@@ -32,9 +34,11 @@ jobs:
         with:
           fetch-depth: 0
       - uses: webfactory/ssh-agent@a6f90b1f127823b31d4d4a8d96047790581349bd # v0.9.1
+        if: ${{ secrets.BITBUCKET_SSH_KEY != '' }}
         with:
           ssh-private-key: ${{ secrets.BITBUCKET_SSH_KEY }}
       - name: Mirror to Bitbucket
+        if: ${{ secrets.BITBUCKET_SSH_KEY != '' }}
         run: |
           ssh-keyscan -t ed25519 bitbucket.org >> ~/.ssh/known_hosts
           git remote add bitbucket git@bitbucket.org:${{ vars.BITBUCKET_ORG || vars.MIRROR_ORG || github.repository_owner }}/${{ github.event.repository.name }}.git || true
@@ -48,9 +52,11 @@ jobs:
         with:
           fetch-depth: 0
       - uses: webfactory/ssh-agent@a6f90b1f127823b31d4d4a8d96047790581349bd # v0.9.1
+        if: ${{ secrets.CODEBERG_SSH_KEY != '' }}
         with:
           ssh-private-key: ${{ secrets.CODEBERG_SSH_KEY }}
       - name: Mirror to Codeberg
+        if: ${{ secrets.CODEBERG_SSH_KEY != '' }}
         run: |
           ssh-keyscan -t ed25519 codeberg.org >> ~/.ssh/known_hosts
           git remote add codeberg git@codeberg.org:${{ vars.CODEBERG_ORG || vars.MIRROR_ORG || github.repository_owner }}/${{ github.event.repository.name }}.git || true
@@ -64,9 +70,11 @@ jobs:
         with:
           fetch-depth: 0
       - uses: webfactory/ssh-agent@a6f90b1f127823b31d4d4a8d96047790581349bd # v0.9.1
+        if: ${{ secrets.SOURCEHUT_SSH_KEY != '' }}
         with:
           ssh-private-key: ${{ secrets.SOURCEHUT_SSH_KEY }}
       - name: Mirror to SourceHut
+        if: ${{ secrets.SOURCEHUT_SSH_KEY != '' }}
         run: |
           ssh-keyscan -t ed25519 git.sr.ht >> ~/.ssh/known_hosts
           git remote add sourcehut git@git.sr.ht:~${{ vars.SOURCEHUT_ORG || vars.MIRROR_ORG || github.repository_owner }}/${{ github.event.repository.name }} || true
@@ -80,9 +88,11 @@ jobs:
         with:
           fetch-depth: 0
       - uses: webfactory/ssh-agent@a6f90b1f127823b31d4d4a8d96047790581349bd # v0.9.1
+        if: ${{ secrets.DISROOT_SSH_KEY != '' }}
         with:
           ssh-private-key: ${{ secrets.DISROOT_SSH_KEY }}
       - name: Mirror to Disroot
+        if: ${{ secrets.DISROOT_SSH_KEY != '' }}
         run: |
           ssh-keyscan -t ed25519 git.disroot.org >> ~/.ssh/known_hosts
           git remote add disroot git@git.disroot.org:${{ vars.DISROOT_ORG || vars.MIRROR_ORG || github.repository_owner }}/${{ github.event.repository.name }}.git || true
@@ -96,9 +106,11 @@ jobs:
         with:
           fetch-depth: 0
       - uses: webfactory/ssh-agent@a6f90b1f127823b31d4d4a8d96047790581349bd # v0.9.1
+        if: ${{ secrets.GITEA_SSH_KEY != '' }}
         with:
           ssh-private-key: ${{ secrets.GITEA_SSH_KEY }}
       - name: Mirror to Gitea
+        if: ${{ secrets.GITEA_SSH_KEY != '' }}
         run: |
           ssh-keyscan -t ed25519 ${{ vars.GITEA_HOST }} >> ~/.ssh/known_hosts
           git remote add gitea git@${{ vars.GITEA_HOST }}:${{ vars.GITEA_ORG || vars.MIRROR_ORG || github.repository_owner }}/${{ github.event.repository.name }}.git || true
@@ -121,6 +133,7 @@ jobs:
           cargo install radicle-cli --locked
           echo "$HOME/.cargo/bin" >> $GITHUB_PATH
       - name: Mirror to Radicle
+        if: ${{ secrets.RADICLE_KEY != '' }}
         run: |
           echo "${{ secrets.RADICLE_KEY }}" > ~/.radicle/keys/radicle
           chmod 600 ~/.radicle/keys/radicle
