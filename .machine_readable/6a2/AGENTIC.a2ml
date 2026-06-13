@@ -5,6 +5,8 @@
 # Defines what AI agents can and cannot do in this repository.
 
 [metadata]
+name = "Cliodynamics.jl-agentic"
+project = "Cliodynamics.jl"
 version = "0.1.0"
 last-updated = "2026-03-16"
 

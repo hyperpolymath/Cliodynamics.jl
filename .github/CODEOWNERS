@@ -9,7 +9,7 @@
 SECURITY.md @hyperpolymath
 .github/workflows/ @hyperpolymath
 .machine_readable/ @hyperpolymath
-contractiles/ @hyperpolymath
+.machine_readable/contractiles/ @hyperpolymath
 
 # License files
 LICENSE @hyperpolymath

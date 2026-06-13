@@ -7,6 +7,11 @@
 # branch supplied no flat Dustfile; pre-estate nested contractiles/dust/
 # never existed in this repo). Added 2026-06-13.
 
+[metadata]
+name = "Cliodynamics.jl-dustfile"
+project = "Cliodynamics.jl"
+schema_version = "1.0"
+
 [dustfile]
 version = "1.0.0"
 format = "a2ml"

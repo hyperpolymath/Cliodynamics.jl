@@ -3,6 +3,9 @@
 # See: https://github.com/hyperpolymath/gv-clade-index
 
 [identity]
+name = "Cliodynamics.jl"
+project = "Cliodynamics.jl"
+version = "1.0"
 uuid = "963dd833-9895-5f04-9c7b-62a834b76e1c"
 primary-forge = "github"
 primary-owner = "hyperpolymath"
