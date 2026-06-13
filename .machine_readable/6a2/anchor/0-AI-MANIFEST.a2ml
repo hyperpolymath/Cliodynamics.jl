@@ -1,3 +1,11 @@
+# SPDX-License-Identifier: MPL-2.0
+# 0-AI-MANIFEST.a2ml — AI agent context for the anchor directory
+
+[metadata]
+name = "Cliodynamics.jl-anchor-manifest"
+project = "Cliodynamics.jl"
+schema_version = "1.0"
+
 # AI Manifest for Anchor Directory
 
 ## Purpose

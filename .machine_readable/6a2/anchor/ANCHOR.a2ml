@@ -1,3 +1,11 @@
+# SPDX-License-Identifier: MPL-2.0
+# ANCHOR.a2ml — canonical authority anchor for Cliodynamics.jl
+
+[metadata]
+name = "Cliodynamics.jl-anchor"
+project = "Cliodynamics.jl"
+schema_version = "1.0"
+
 # ⚓ ANCHOR: Cliodynamics.jl
 # This is the canonical authority for the Cliodynamics.jl repository.
 

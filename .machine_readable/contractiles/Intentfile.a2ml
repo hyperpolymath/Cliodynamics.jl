@@ -17,6 +17,11 @@
 # carried was the un-substituted rsr-template-repo Intentfile (its intents
 # were "repo-initialization / contractile-completeness for the template").
 
+[metadata]
+name = "Cliodynamics.jl-intentfile"
+project = "Cliodynamics.jl"
+schema_version = "1.0"
+
 @abstract:
 North-star for Cliodynamics.jl: quantitative modeling of historical dynamics
 via Peter Turchin's cliodynamic theories. The invariant goal is a rigorous,

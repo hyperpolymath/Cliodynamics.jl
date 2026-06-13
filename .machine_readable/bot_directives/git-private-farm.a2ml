@@ -5,6 +5,9 @@
 # workflow .github/workflows/instant-sync.yml (secret NAME only; no token values).
 
 [metadata]
+name = "Cliodynamics.jl-git-private-farm"
+project = "Cliodynamics.jl"
+schema_version = "1.0"
 repo = "Cliodynamics.jl"
 last-updated = "2026-06-13"
 owner = "hyperpolymath"

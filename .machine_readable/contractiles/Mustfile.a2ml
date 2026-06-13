@@ -12,6 +12,11 @@
 # own delivered 06-12 layout is FLAT. The checks below match Cliodynamics.jl's
 # ACTUAL flat layout. The template drift is recorded for upstream fix.
 
+[metadata]
+name = "Cliodynamics.jl-mustfile"
+project = "Cliodynamics.jl"
+schema_version = "1.0"
+
 @abstract:
 Physical-state invariants for Cliodynamics.jl. Hard requirements — CI and
 pre-commit hooks fail if any critical check fails.

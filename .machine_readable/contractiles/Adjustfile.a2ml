@@ -9,6 +9,11 @@
 # NOTE (2026-06-13): rewritten for Cliodynamics.jl. The estate-carried file was the
 # rsr-template-repo Adjustfile (drift checks about "template placeholders").
 
+[metadata]
+name = "Cliodynamics.jl-adjustfile"
+project = "Cliodynamics.jl"
+schema_version = "1.0"
+
 @abstract:
 Drift tolerances and corrective actions for Cliodynamics.jl. Unlike MUST (hard
 gate), ADJUST tracks cumulative drift against tolerance bands and proposes

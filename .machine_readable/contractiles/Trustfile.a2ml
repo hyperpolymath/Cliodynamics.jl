@@ -10,6 +10,11 @@
 # "template files"; the integrity invariants below are kept and apply to
 # Cliodynamics.jl.
 
+[metadata]
+name = "Cliodynamics.jl-trustfile"
+project = "Cliodynamics.jl"
+schema_version = "1.0"
+
 @abstract:
 Trust boundaries and integrity checks for Cliodynamics.jl. Defines what AI
 agents may do autonomously and what requires human approval, plus checks that

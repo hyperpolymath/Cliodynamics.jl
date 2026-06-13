@@ -1,3 +1,11 @@
+# SPDX-License-Identifier: MPL-2.0
+# 0-AI-MANIFEST.a2ml — AI agent context for the 6a2 metadata directory
+
+[metadata]
+name = "Cliodynamics.jl-6a2-manifest"
+project = "Cliodynamics.jl"
+schema_version = "1.0"
+
 # AI Manifest for 6a2 Directory
 
 ## Purpose

@@ -11,6 +11,11 @@
 # repo's own existing gates (julia test suite, CI workflows), not new policy.
 # Added 2026-06-13.
 
+[metadata]
+name = "Cliodynamics.jl-bustfile"
+project = "Cliodynamics.jl"
+schema_version = "1.0"
+
 [bustfile]
 version = "1.0.0"
 format = "a2ml"
