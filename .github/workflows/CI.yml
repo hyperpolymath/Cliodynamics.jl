@@ -1,27 +1,25 @@
 # SPDX-License-Identifier: MPL-2.0
 
 name: CI
-
 on:
   push:
     branches: [main]
     tags: ['v*']
   pull_request:
     branches: [main]
-
 permissions:
   contents: read
-
 jobs:
   test:
     name: Julia ${{ matrix.version }} - ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
+    timeout-minutes: 15
     strategy:
       fail-fast: false
       matrix:
         version:
           - '1.10'
-          - '1'      # Latest stable
+          - '1' # Latest stable
         os:
           - ubuntu-latest
         include:

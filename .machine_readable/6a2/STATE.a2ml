@@ -1,14 +1,66 @@
 # SPDX-License-Identifier: MPL-2.0
 # STATE.a2ml — Project state checkpoint
 # Converted from STATE.scm on 2026-03-15
+# Refreshed: 2026-06-13 (06-12 estate standardization)
 
 [metadata]
 project = "Cliodynamics.jl"
-version = "0.1.0"
-last-updated = "2026-03-15"
+version = "1.0.0"
+last-updated = "2026-06-13"
 status = "active"
 
 [project-context]
 name = "Cliodynamics.jl"
-completion-percentage = 0
-phase = "In development"
+completion-percentage = 100
+phase = "Stable library; ongoing research feature additions"
+
+[build]
+language = "Julia"
+minimum-julia = "1.10"
+test-command = "julia --project=. -e 'using Pkg; Pkg.test()'"
+docs-command = "julia --project=docs docs/make.jl"
+tests-documented = "124 tests across 18 testsets (per CLAUDE.md)"
+testsets-count = 23      # outer container + 22 inner @testset blocks in test/runtests.jl
+exports = 34             # exported functions per CLAUDE.md
+
+[components]
+core-source = "src/Cliodynamics.jl (single-file, ADR-002)"
+plots-extension = "ext/CliodynamicsPlotsExt.jl (5 plot types, loaded with RecipesBase/Plots)"
+turing-extension = "ext/CliodynamicsTuringExt.jl (Bayesian inference, loaded with Turing + Distributions + MCMCChains)"
+ffi-layer = "ffi/zig/ (Zig FFI implementing Idris2 ABI)"
+abi-definitions = "src/abi/ (Idris2 ABI definitions with formal proofs)"
+documentation = "docs/ (Documenter.jl, 10 pages)"
+examples = "examples/ (basic_usage.jl, historical_analysis.jl, publication_examples.jl)"
+data = "data/seshat_sample.csv (synthetic Seshat-format historical data)"
+
+[models]
+implemented = [
+  "malthusian_model",
+  "demographic_structural_model",
+  "state_capacity_model",
+  "collective_action_problem",
+  "spatial_instability_diffusion",
+  "territorial_competition_model",
+]
+indicators = [
+  "elite_overproduction_index",
+  "political_stress_indicator",
+  "instability_probability",
+  "conflict_intensity",
+  "crisis_threshold",
+  "instability_events",
+  "population_pressure",
+  "carrying_capacity_estimate",
+  "frontier_formation_index",
+]
+cycles = ["secular_cycle_analysis", "detect_cycle_phases"]
+fitting = ["fit_malthusian", "fit_demographic_structural", "estimate_parameters"]
+data-io = ["load_seshat_csv", "prepare_seshat_data"]
+bayesian-extension = ["bayesian_malthusian", "bayesian_dst", "bayesian_model_comparison"]
+utilities = ["moving_average", "detrend", "normalize_timeseries"]
+
+[governance]
+estate-standard = "06-12"
+contractile-layout = "flat (Adjust/Bust/Dust/Intent/Must/Trust .a2ml + Justfile)"
+bot-directives = "trio present (hypatia / gitbot-fleet / git-private-farm), added 2026-06-13"
+self-validating = ".machine_readable/self-validating/ (k9 templates + examples)"

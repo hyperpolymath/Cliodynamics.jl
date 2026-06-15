@@ -1,21 +1,19 @@
 # SPDX-License-Identifier: MPL-2.0
 
 name: Documentation
-
 on:
   push:
     branches: [main]
     tags: ['v*']
   pull_request:
     branches: [main]
-
 permissions:
   contents: write
   statuses: write
-
 jobs:
   build:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
       - uses: julia-actions/setup-julia@4c0cb0fce8556fdb04a90347310e5db8b1f98fb9 # v2

@@ -1,0 +1,96 @@
+# SPDX-License-Identifier: MPL-2.0
+# Intentfile (A2ML Canonical) — north-star contractile for Cliodynamics.jl
+# Author: Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
+#
+# Paired runner: intend.ncl
+# Verb:          intend
+#
+# Semantics: North-star contractile. Declares BOTH concrete committed
+#            next-actions AND horizon aspirations. Non-gating — a report,
+#            not a gate (see Mustfile for hard gates).
+#              [[intents]] — "we WILL do this; track progress"
+#                            status: declared → in_progress → done | deferred | retired
+#              [[wishes]]  — "we WISH this were true; revisit later"
+#                            grouped by horizon: near / mid / far.
+#
+# NOTE (2026-06-13): rewritten for Cliodynamics.jl. The file the estate branch
+# carried was the un-substituted rsr-template-repo Intentfile (its intents
+# were "repo-initialization / contractile-completeness for the template").
+
+[metadata]
+name = "Cliodynamics.jl-intentfile"
+project = "Cliodynamics.jl"
+schema_version = "1.0"
+
+@abstract:
+North-star for Cliodynamics.jl: quantitative modeling of historical dynamics
+via Peter Turchin's cliodynamic theories. The invariant goal is a rigorous,
+well-tested Julia library for demographic-structural theory, secular-cycle
+analysis, elite overproduction modelling, spatial instability dynamics, and
+Bayesian inference over historical data.
+@end
+
+## Purpose
+
+Cliodynamics.jl makes historical dynamics a first-class computational object
+in Julia. ODE models return DifferentialEquations.jl solutions; parameters
+follow academic literature conventions; Seshat-format historical data is
+natively supported; and Bayesian inference (Turing.jl extension) brings
+credible-interval analysis to cliodynamic parameters.
+
+## Anti-Purpose
+
+Cliodynamics.jl is NOT:
+- a general-purpose statistics toolkit (domain is cliodynamics / Turchin models)
+- a real-time simulation platform (batch ODE integration; offline analysis)
+- a polemic framework (neutral quantitative tool; interpretations belong in the literature)
+
+## If In Doubt
+
+Sensitive areas — ask before changing: mathematical model implementations
+(`src/Cliodynamics.jl`), parameter conventions (must track published literature),
+Zig FFI layer (`ffi/zig/`), Idris2 ABI definitions (`src/abi/`), and the
+single-file design decision (ADR-002 — do not split the source).
+
+## Committed Next-Actions
+
+### zig-ffi-completeness
+- description: Zig FFI layer fully wired with all required Idris2 ABI symbols
+- probe: test -f ffi/zig/cliodynamics_ffi.zig
+- status: in_progress
+- notes: Idris2 ABI definitions + formal proofs live in src/abi/
+
+### extension-coverage
+- description: Both package extensions fully exercised in CI
+- probe: grep -q 'CliodynamicsPlotsExt\|CliodynamicsTuringExt' .github/workflows/CI.yml
+- status: declared
+
+### seshat-data-coverage
+- description: Seshat data loading covers real CSV formats beyond the synthetic sample
+- probe: grep -q 'seshat' test/runtests.jl
+- status: declared
+
+## Wishes
+
+### Near Horizon
+#### measured-benchmarks
+- description: replace qualitative performance notes with timed benchmarks across model types
+- horizon: near
+- status: declared
+
+### Mid Horizon
+#### additional-turchin-models
+- description: extend model set to cover fiscal-military model + inter-polity competition
+- horizon: mid
+- status: declared
+
+#### docs-interactive-examples
+- description: Documenter pages with live-rendered plot output via PlutoStaticHTML or similar
+- horizon: mid
+- status: declared
+
+### Far Horizon
+#### bayesian-model-comparison-full
+- description: full LOO-CV / WAIC comparison across competing cliodynamic theories
+- horizon: far
+- status: declared

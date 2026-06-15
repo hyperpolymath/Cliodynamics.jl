@@ -1,0 +1,26 @@
+# SPDX-License-Identifier: MPL-2.0
+# ANCHOR.a2ml — canonical authority anchor for Cliodynamics.jl
+
+[metadata]
+name = "Cliodynamics.jl-anchor"
+project = "Cliodynamics.jl"
+schema_version = "1.0"
+
+# ⚓ ANCHOR: Cliodynamics.jl
+# This is the canonical authority for the Cliodynamics.jl repository.
+
+id: "org.hyperpolymath.Cliodynamics.jl"
+version: "1.0.0"
+clade: "unknown"
+status: "active"
+
+# SSG Configuration (Unified boj-server build)
+ssg:
+  engine: "casket"
+  output_dir: "public"
+  boj_trigger: true
+  cartridge: "ssg-mcp"
+
+# Relationships
+parents:
+  - "org.hyperpolymath.boj-server"

@@ -1,0 +1,50 @@
+// SPDX-License-Identifier: MPL-2.0
+// Copyright (c) Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
+= Bot directives — Cliodynamics.jl
+:toc:
+
+== Purpose
+
+Per-repo directives for automated agents operating on
+`hyperpolymath/Cliodynamics.jl`. These files tell bots what this repository
+considers safe, what is forbidden, and which findings are already
+adjudicated, so automated runs do not relitigate settled decisions or
+touch protected surfaces.
+
+== Precedence
+
+. Maintainer instruction (see `MAINTAINERS.adoc`) — always wins.
+. These directives.
+. Bot built-in defaults.
+
+== Files
+
+Estate-standard trio (net-new 2026-06-13):
+
+* `hypatia.a2ml` — Hypatia scanner config pointers + pre-adjudicated finding
+  classes (Zig-FFI unsafe calls, synthetic Seshat CSV data), grounded in the
+  repo's `CLAUDE.md` facts.
+* `gitbot-fleet.a2ml` — fleet roster (CompatHelper, TagBot, dependabot,
+  hypatia), branch policy, never-touch paths, per-bot constraints.
+* `git-private-farm.a2ml` — `.git-private-farm` propagation contract;
+  propagation is *live* here (the repo ships
+  `.github/workflows/instant-sync.yml`).
+
+AI-agent methodology files (pre-existing):
+
+* `methodology.a2ml` — default mode, invariants, ring ceiling, priority
+  weights, convergent budget
+* `coverage.a2ml` — session coverage tracking
+* `debt.a2ml` — meander debt from previous sessions
+
+== Repo-specific ground rules (summary)
+
+* `src/Cliodynamics.jl` is the single-file core (ADR-002) — do not split.
+* `ffi/zig/` and `src/abi/` are ABI-sensitive — changes need maintainer review.
+* Mathematical model implementations must track the academic literature
+  (Turchin et al.); do not change model equations without citation.
+* CI green required before merge; draft PRs only.
+
+== Reference
+
+ADR-002 in `standards/agentic-a2ml/docs/ADR-002-methodology-layer.adoc`

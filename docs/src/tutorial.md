@@ -1,3 +1,7 @@
+<!--
+SPDX-License-Identifier: MPL-2.0
+Copyright (c) Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
+-->
 # Tutorial
 
 This tutorial walks through the core features of Cliodynamics.jl, from basic population models to full historical analysis pipelines.

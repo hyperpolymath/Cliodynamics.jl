@@ -1,0 +1,57 @@
+# SPDX-License-Identifier: MPL-2.0
+# gitbot-fleet.a2ml — gitbot fleet directives for Cliodynamics.jl.
+# Net-new at the 2026-06-13 governance checkpoint per the estate
+# bot_directives standard. Fleet roster and per-bot constraints grounded in
+# the repo's existing bot_directives/*.a2ml and .github/workflows/*.yml.
+
+[metadata]
+name = "Cliodynamics.jl-gitbot-fleet"
+project = "Cliodynamics.jl"
+schema_version = "1.0"
+repo = "Cliodynamics.jl"
+last-updated = "2026-06-13"
+owner = "hyperpolymath"
+
+[fleet]
+bots = ["hypatia", "CompatHelper", "TagBot", "dependabot"]
+
+[fleet.roles]
+hypatia = "security scanning (hypatia-scan.yml)"
+CompatHelper = "Julia [compat] bound maintenance (CompatHelper.yml)"
+TagBot = "release tagging from GitHub releases (TagBot.yml)"
+dependabot = "GitHub Actions dependency bumps (dependabot.yml + dependabot-automerge.yml)"
+
+[branch-policy]
+working-branch-pattern = "claude/<slug> or session/<topic> for human sessions; CompatHelper/* for CompatHelper; dependabot/* for dependabot"
+draft-PRs-only = true
+ci-green-before-merge = true
+never-touch = [
+  ".claude/CLAUDE.md",
+  "src/Cliodynamics.jl",        # single-file core (ADR-002) — do not split
+  "ffi/zig/",                    # Zig FFI layer — ABI-sensitive
+  "src/abi/",                    # Idris2 ABI definitions + formal proofs
+  ".github/workflows/",          # CI hardening is review-gated, not bot-edited
+]
+
+# ============================================================
+# Per-bot constraints
+# ============================================================
+
+[per-bot.CompatHelper]
+allow = ["opening PRs to widen Julia [compat] upper bounds after CI green"]
+deny = ["weakening lower bounds below Julia 1.10", "adding new [deps] entries"]
+note = "CompatHelper operates on Project.toml [compat] only; it does not edit source. Gate = CI.yml green before merge."
+
+[per-bot.TagBot]
+allow = ["creating git tags from GitHub releases"]
+deny = ["creating releases", "editing CHANGELOG"]
+note = "TagBot is purely reactive to published releases; it does not initiate releases."
+
+[per-bot.dependabot]
+allow = ["opening PRs to bump GitHub Actions versions in .github/workflows/"]
+deny = ["bumping Julia or Zig toolchain pins without a green CI run"]
+note = "dependabot-automerge.yml gates automerge on CI green. Actions bumps must be SHA-pinned per the security policy."
+
+[per-bot.hypatia]
+deny = ["auto-suppressing findings without human adjudication", "editing source files"]
+note = "Hypatia findings go to issues + hypatia.a2ml [[accepted-findings]] only after human adjudication."

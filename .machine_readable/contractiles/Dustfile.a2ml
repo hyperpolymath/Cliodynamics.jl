@@ -1,0 +1,81 @@
+# SPDX-License-Identifier: MPL-2.0
+# Dustfile.a2ml — cleanup, hygiene & recovery contract for Cliodynamics.jl
+#
+# Format: TOML-A2ML (parses with tomllib; `#` comments, [section], key = "value")
+#
+# Provenance: flat-contractile completion of the estate layout (estate
+# branch supplied no flat Dustfile; pre-estate nested contractiles/dust/
+# never existed in this repo). Added 2026-06-13.
+
+[metadata]
+name = "Cliodynamics.jl-dustfile"
+project = "Cliodynamics.jl"
+schema_version = "1.0"
+
+[dustfile]
+version = "1.0.0"
+format = "a2ml"
+repo = "Cliodynamics.jl"
+last-updated = "2026-06-13"
+
+# ============================================================
+# Recovery & rollback tasks
+# ============================================================
+
+[[tasks]]
+name = "source-rollback"
+doc = "Revert all uncommitted source changes to last commit."
+tag = "rollback"
+cmd = "git checkout HEAD -- ."
+
+[[tasks]]
+name = "clean-build"
+doc = "Remove Julia build artifacts and docs output."
+tag = "clean"
+cmd = "rm -rf docs/build && find . -name '*.ji' -o -name 'precompile*.jl' 2>/dev/null | grep -v '.git' | xargs rm -f 2>/dev/null; true"
+
+[[tasks]]
+name = "reinstantiate"
+doc = "Rebuild Manifest.toml from Project.toml."
+tag = "verify"
+cmd = "julia --project=. -e 'using Pkg; Pkg.instantiate()'"
+
+[[tasks]]
+name = "full-test"
+doc = "Cold reinstantiate + full test suite."
+tag = "verify"
+cmd = "julia --project=. -e 'using Pkg; Pkg.instantiate(); Pkg.test()'"
+
+# ============================================================
+# Cleanup policy
+# ============================================================
+
+[cleanup]
+build-artifacts = "docs/build/ (Documenter output), *.ji precompile caches; all gitignored"
+generated-dirs = "docs/build/ is gitignored; safe to delete at any time"
+stale-branch-policy = "session/* and claude/* branches are dispositioned (landing / superseded / abandoned) at checkpoint; bots never delete branches"
+manifest-policy = "Manifest.toml is gitignored per Julia convention; rebuild with 'julia --project=. -e \"using Pkg; Pkg.instantiate()\"' locally"
+artifact-retention = "not-applicable"
+artifact-retention-reason = "Cliodynamics.jl is a source library; no compiled binary artifacts are published"
+
+# ============================================================
+# Hygiene
+# ============================================================
+
+[hygiene]
+code-hygiene = "Julia style guide (lowercase_underscores for functions, CamelCase for types); all exported functions have docstrings"
+single-file-discipline = "ADR-002: src/Cliodynamics.jl is intentionally single-file; extensions live in ext/; do not split the core"
+test-hygiene = "all exported functions must have @testset coverage in test/runtests.jl; 124 tests / 18 testsets as of 2026-06-13"
+dead-code-rule = "unused helpers removed; the single-file design keeps everything visible; no orphan ext/ modules"
+todo-tracking = "inline TODOs and deferred items go to GitHub issues"
+formatting = "Julia style guide; no autoformatter mandated, but consistent indentation enforced in PR review"
+
+# ============================================================
+# Reversibility
+# ============================================================
+
+[reversibility]
+backup-before-destructive = true
+rollback-mechanism = "git-revert (main is append-only; superseded docs get banners, not deletion)"
+data-retention-policy = "not-applicable"
+data-retention-reason = "Cliodynamics.jl holds no runtime user data under version control; data/seshat_sample.csv is synthetic example data, not production records"

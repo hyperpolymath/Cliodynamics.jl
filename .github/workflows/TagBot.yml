@@ -1,7 +1,6 @@
 # SPDX-License-Identifier: MPL-2.0
 
 name: TagBot
-
 on:
   issue_comment:
     types: [created]
@@ -9,17 +8,16 @@ on:
     inputs:
       lookback:
         default: 3
-
 permissions:
   actions: read
   contents: write
   issues: read
   pull-requests: read
-
 jobs:
   TagBot:
     if: github.event_name == 'workflow_dispatch' || github.actor == 'JuliaTagBot'
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - uses: JuliaRegistries/TagBot@bdfeaa1ff40e0ea449f9539aa21b2e587431ed49 # v1
         with:
