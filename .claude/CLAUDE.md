@@ -1,5 +1,5 @@
 <!--
-SPDX-License-Identifier: MPL-2.0
+SPDX-License-Identifier: CC-BY-SA-4.0
 Copyright (c) Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
 -->
 # Cliodynamics.jl - Project Instructions
@@ -121,7 +121,7 @@ MPL-2.0 (Palimpsest License)
 
 All files must have SPDX header:
 ```julia
-# SPDX-License-Identifier: MPL-2.0
+# SPDX-License-Identifier: CC-BY-SA-4.0
 ```
 
 ## Notes for AI Agents
