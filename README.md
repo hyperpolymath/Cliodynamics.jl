@@ -1,119 +1,173 @@
-[![Sponsor](https://img.shields.io/badge/Sponsor-%E2%9D%A4-pink?logo=github)](https://github.com/sponsors/hyperpolymath)
+<!--
+SPDX-License-Identifier: CC-BY-SA-4.0
+SPDX-FileCopyrightText: 2025-2026 Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
+-->
 
-// SPDX-License-Identifier: CC-BY-SA-4.0
+[![OpenSSF Best Practices](https://img.shields.io/badge/OpenSSF-Best_Practices-green?logo=opensourcesecurity)](https://www.bestpractices.dev/en/projects/new?repo_url=https://github.com/hyperpolymath/Cliodynamics.jl)
+[![License: PMPL-1.0](https://img.shields.io/badge/License-MPL--2.0-blue.svg)](https://github.com/hyperpolymath/palimpsest-license) <embed
+src="https://api.thegreenwebfoundation.org/greencheckimage/github.com"
+data-link="https://www.thegreenwebfoundation.org/green-web-check/?url=github.com" />
+[![Topology](https://img.shields.io/badge/Project-Topology-9558B2)](TOPOLOGY.md)
+[![100](https://img.shields.io/badge/Completion-100%25-green)](TOPOLOGY.md) [![License](https://img.shields.io/badge/license-PMPL--1.0--or--later-blue.svg)](LICENSE)
+image:<a href="https://img.shields.io/badge/julia-1.10+-purple.svg"
+data-link="https://julialang.org">Julia</a>
+![Version](https://img.shields.io/badge/version-1.0.0-green.svg)
 
-= Cliodynamics.jl
-:toc: macro
-:toclevels: 2
-:url-repo: https://github.com/hyperpolymath/Cliodynamics.jl
+A Julia library for mathematical modeling and statistical analysis of
+historical dynamics.
 
-image:https://img.shields.io/badge/OpenSSF-Best_Practices-green?logo=opensourcesecurity[OpenSSF Best Practices,link="https://www.bestpractices.dev/en/projects/new?repo_url=https://github.com/hyperpolymath/Cliodynamics.jl"]
-image:https://img.shields.io/badge/License-MPL--2.0-blue.svg[License: PMPL-1.0,link="https://github.com/hyperpolymath/palimpsest-license"]
-image:https://api.thegreenwebfoundation.org/greencheckimage/github.com[Green Web,link="https://www.thegreenwebfoundation.org/green-web-check/?url=github.com"]
-image:https://img.shields.io/badge/Project-Topology-9558B2[Topology,link=TOPOLOGY.md]
-image:https://img.shields.io/badge/Completion-100%25-green[100%,link=TOPOLOGY.md]
-image:https://img.shields.io/badge/license-PMPL--1.0--or--later-blue.svg[License,link=LICENSE]
-image:https://img.shields.io/badge/julia-1.10+-purple.svg[Julia,link=https://julialang.org]
-image:https://img.shields.io/badge/version-1.0.0-green.svg[Version]
+<div id="toc">
 
-A Julia library for mathematical modeling and statistical analysis of historical dynamics.
+</div>
 
-toc::[]
+# Overview
 
-== Overview
+Cliodynamics is the scientific study of historical dynamics — applying
+mathematical models and quantitative methods to understand long-term
+patterns in social complexity, state formation, demographic cycles,
+elite dynamics, and political instability. This package implements
+frameworks from Peter Turchin’s research program in cliodynamics.
 
-Cliodynamics is the scientific study of historical dynamics — applying mathematical models and quantitative methods to understand long-term patterns in social complexity, state formation, demographic cycles, elite dynamics, and political instability. This package implements frameworks from Peter Turchin's research program in cliodynamics.
+## What is Cliodynamics?
 
-=== What is Cliodynamics?
+Cliodynamics treats history as a science, using mathematical models to
+analyze:
 
-Cliodynamics treats history as a science, using mathematical models to analyze:
+- Population dynamics and demographic pressures
 
-* Population dynamics and demographic pressures
-* Elite overproduction and intra-elite competition
-* Political instability and state breakdown
-* Secular cycles (150-300 year oscillations in societies)
-* State capacity and collective action problems
+- Elite overproduction and intra-elite competition
 
-The field bridges history, mathematics, evolutionary theory, and complex systems science.
+- Political instability and state breakdown
 
-== Features
+- Secular cycles (150-300 year oscillations in societies)
 
-=== Population Dynamics
+- State capacity and collective action problems
 
-* *Malthusian Models*: Logistic population growth with carrying capacity constraints
-* *Demographic-Structural Theory (DST)*: Coupled models of population, elites, and state capacity
-* *Population Pressure*: Measurement of stress relative to carrying capacity
+The field bridges history, mathematics, evolutionary theory, and complex
+systems science.
 
-=== Elite Dynamics
+# Features
 
-* *Elite Overproduction Index*: Quantify when elite supply exceeds available positions
-* *Elite-to-Population Ratios*: Track elite expansion relative to general population
-* *Intra-Elite Competition*: Model competition effects on political stability
+## Population Dynamics
 
-=== Political Instability
+- **Malthusian Models**: Logistic population growth with carrying
+  capacity constraints
 
-* *Political Stress Indicator (PSI)*: Composite measure combining:
-** Mass Mobilization Potential (wage decline, immiseration)
-** Elite Mobilization Potential (elite overproduction)
-** State Fiscal Distress (revenue crisis)
-* *Instability Probability*: Convert stress indicators to event probabilities
-* *Conflict Intensity*: Aggregate historical instability events over time
+- **Demographic-Structural Theory (DST)**: Coupled models of population,
+  elites, and state capacity
 
-=== Secular Cycles
+- **Population Pressure**: Measurement of stress relative to carrying
+  capacity
 
-* *Cycle Detection*: Identify 150-300 year oscillations in historical data
-* *Phase Classification*: Categorize periods as Expansion, Stagflation, Crisis, or Depression
-* *Trend-Cycle Decomposition*: Separate long-term trends from cyclical components
+## Elite Dynamics
 
-=== State Formation
+- **Elite Overproduction Index**: Quantify when elite supply exceeds
+  available positions
 
-* *State Capacity Models*: Tax revenue, military strength, institutional quality
-* *Collective Action Problems*: Model cooperation challenges in state building
-* *Institutional Development*: Track state-building trajectories
+- **Elite-to-Population Ratios**: Track elite expansion relative to
+  general population
 
-=== Spatial Models (v1.0.0)
+- **Intra-Elite Competition**: Model competition effects on political
+  stability
 
-* *Instability Diffusion*: Multi-region model of instability spreading across borders
-* *Territorial Competition*: Lotka-Volterra style state competition over territory
-* *Frontier Formation*: Meta-ethnic frontier index (Turchin's frontier thesis)
+## Political Instability
 
-=== Model Fitting & Estimation
+- **Political Stress Indicator (PSI)**: Composite measure combining:
 
-* *Malthusian Fitting*: Recover growth rate and carrying capacity from observed population data
-* *DST Fitting*: Fit full demographic-structural model to historical time series
-* *Parameter Estimation*: Generic model fitting with bootstrap confidence intervals
-* *Seshat Integration*: Load and analyze data from the Seshat Global History Databank
+  - Mass Mobilization Potential (wage decline, immiseration)
 
-=== Bayesian Inference (v1.0.0)
+  - Elite Mobilization Potential (elite overproduction)
 
-Requires `using Turing` (loaded as package extension):
+  - State Fiscal Distress (revenue crisis)
 
-* *Bayesian Malthusian*: MCMC posterior estimation for growth parameters
-* *Bayesian DST*: Full Bayesian fit of demographic-structural model
-* *Model Comparison*: WAIC-based model selection
+- **Instability Probability**: Convert stress indicators to event
+  probabilities
 
-=== Plotting
+- **Conflict Intensity**: Aggregate historical instability events over
+  time
 
-Plot recipes for Plots.jl via package extension (loaded automatically when `using Plots`):
+## Secular Cycles
 
-* `plot(psi_result, Val(:psi))` — PSI with component breakdown
-* `plot(eoi_result, Val(:eoi))` — Elite overproduction with baseline
-* `plot(analysis, Val(:secular_cycle))` — Trend-cycle decomposition
-* `plot(phases, Val(:phases))` — Phase-colored timeline
-* `plot(intensity, Val(:conflict))` — Conflict intensity
+- **Cycle Detection**: Identify 150-300 year oscillations in historical
+  data
 
-== Installation
+- **Phase Classification**: Categorize periods as Expansion,
+  Stagflation, Crisis, or Depression
 
-[source,julia]
-----
+- **Trend-Cycle Decomposition**: Separate long-term trends from cyclical
+  components
+
+## State Formation
+
+- **State Capacity Models**: Tax revenue, military strength,
+  institutional quality
+
+- **Collective Action Problems**: Model cooperation challenges in state
+  building
+
+- **Institutional Development**: Track state-building trajectories
+
+## Spatial Models (v1.0.0)
+
+- **Instability Diffusion**: Multi-region model of instability spreading
+  across borders
+
+- **Territorial Competition**: Lotka-Volterra style state competition
+  over territory
+
+- **Frontier Formation**: Meta-ethnic frontier index (Turchin’s frontier
+  thesis)
+
+## Model Fitting & Estimation
+
+- **Malthusian Fitting**: Recover growth rate and carrying capacity from
+  observed population data
+
+- **DST Fitting**: Fit full demographic-structural model to historical
+  time series
+
+- **Parameter Estimation**: Generic model fitting with bootstrap
+  confidence intervals
+
+- **Seshat Integration**: Load and analyze data from the Seshat Global
+  History Databank
+
+## Bayesian Inference (v1.0.0)
+
+Requires `using` `Turing` (loaded as package extension):
+
+- **Bayesian Malthusian**: MCMC posterior estimation for growth
+  parameters
+
+- **Bayesian DST**: Full Bayesian fit of demographic-structural model
+
+- **Model Comparison**: WAIC-based model selection
+
+## Plotting
+
+Plot recipes for Plots.jl via package extension (loaded automatically
+when `using` `Plots`):
+
+- `plot(psi_result,` `Val(:psi))` — PSI with component breakdown
+
+- `plot(eoi_result,` `Val(:eoi))` — Elite overproduction with baseline
+
+- `plot(analysis,` `Val(:secular_cycle))` — Trend-cycle decomposition
+
+- `plot(phases,` `Val(:phases))` — Phase-colored timeline
+
+- `plot(intensity,` `Val(:conflict))` — Conflict intensity
+
+# Installation
+
+```julia
 using Pkg
 Pkg.add("Cliodynamics")
-----
+```
 
-== Quick Start
+# Quick Start
 
-[source,julia]
-----
+```julia
 using Cliodynamics
 using DataFrames
 
@@ -145,14 +199,14 @@ println("PSI at 1900: ", round(psi.psi[end], digits=3))
 timeseries = 100.0 .+ 50.0 .* sin.(2π .* (1:300) ./ 100) .+ 2 .* randn(300)
 analysis = secular_cycle_analysis(Float64.(timeseries), window=30)
 println("Estimated cycle period: $(analysis.period) years")
-----
+```
 
-== Demographic-Structural Theory Example
+# Demographic-Structural Theory Example
 
-Model a complete secular cycle with coupled population, elite, and state dynamics:
+Model a complete secular cycle with coupled population, elite, and state
+dynamics:
 
-[source,julia]
-----
+```julia
 using Cliodynamics
 
 params = DemographicStructuralParams(
@@ -173,14 +227,13 @@ for t in [0.0, 100.0, 200.0, 300.0]
     state = sol(t)
     println("t=$t: N=$(round(state[1],digits=1)), E=$(round(state[2],digits=1)), S=$(round(state[3],digits=1))")
 end
-----
+```
 
-== Seshat Data Integration (v0.2.0)
+# Seshat Data Integration (v0.2.0)
 
 Analyze historical data from the Seshat Global History Databank:
 
-[source,julia]
-----
+```julia
 using Cliodynamics
 using DataFrames
 
@@ -202,12 +255,11 @@ sort!(english, :year)
 fit = fit_malthusian(Float64.(english.year), Float64.(english.population),
                      r_init=0.005, K_init=2_000_000.0)
 println("Fitted r=$(round(fit.params.r, digits=6)), K=$(round(fit.params.K, digits=0))")
-----
+```
 
-== Model Fitting & Parameter Estimation (v0.2.0)
+# Model Fitting & Parameter Estimation (v0.2.0)
 
-[source,julia]
-----
+```julia
 using Cliodynamics
 
 # Fit Malthusian model to observed data
@@ -219,104 +271,121 @@ result = fit_malthusian(years, population, r_init=0.01, K_init=600.0)
 model_fn(p, t) = p[1] .* exp.(p[2] .* (t .- t[1]))
 est = estimate_parameters(model_fn, population, years, [50.0, 0.02], n_bootstrap=200)
 println("r = $(round(est.params[2], digits=5))  95% CI: [$(round(est.ci_lower[2], digits=5)), $(round(est.ci_upper[2], digits=5))]")
-----
+```
 
-== Key Concepts
+# Key Concepts
 
-=== Malthusian Dynamics
+## Malthusian Dynamics
 
 Population grows until constrained by resources (carrying capacity K):
 
-----
-dN/dt = r*N*(1 - N/K)
-----
+    dN/dt = r*N*(1 - N/K)
 
-=== Elite Overproduction
+## Elite Overproduction
 
-When elite aspirants exceed available positions, intra-elite competition intensifies, destabilizing the political system:
+When elite aspirants exceed available positions, intra-elite competition
+intensifies, destabilizing the political system:
 
-----
-EOI = (E/N) / (E/N)_baseline - 1
-----
+    EOI = (E/N) / (E/N)_baseline - 1
 
-=== Political Stress Indicator
+## Political Stress Indicator
 
 Composite index combining three destabilizing forces:
 
-----
-PSI = 0.4*MMP + 0.4*EMP + 0.2*SFD
-----
+    PSI = 0.4*MMP + 0.4*EMP + 0.2*SFD
 
 where:
 
-* MMP = Mass Mobilization Potential (popular immiseration)
-* EMP = Elite Mobilization Potential (elite overproduction)
-* SFD = State Fiscal Distress (revenue crisis)
+- MMP = Mass Mobilization Potential (popular immiseration)
 
-=== Secular Cycles
+- EMP = Elite Mobilization Potential (elite overproduction)
+
+- SFD = State Fiscal Distress (revenue crisis)
+
+## Secular Cycles
 
 Long-term oscillations (150-300 years) with four phases:
 
-1. *Expansion*: Low pressure, state strengthening, prosperity
-2. *Stagflation*: Rising pressure, elite overproduction begins
-3. *Crisis*: Political instability, state breakdown, conflict
-4. *Depression/Intercycle*: Population decline, elite winnowing, recovery
+1.  **Expansion**: Low pressure, state strengthening, prosperity
 
-== References
+2.  **Stagflation**: Rising pressure, elite overproduction begins
 
-=== Primary Sources
+3.  **Crisis**: Political instability, state breakdown, conflict
 
-* Turchin, P. (2003). _Historical Dynamics: Why States Rise and Fall_. Princeton University Press.
-* Turchin, P. (2016). _Ages of Discord: A Structural-Demographic Analysis of American History_. Beresta Books.
-* Turchin, P., & Nefedov, S. A. (2009). _Secular Cycles_. Princeton University Press.
-* Turchin, P. (2023). _End Times: Elites, Counter-Elites, and the Path of Political Disintegration_. Penguin Press.
+4.  **Depression/Intercycle**: Population decline, elite winnowing,
+    recovery
 
-=== Theoretical Foundations
+# References
 
-* Goldstone, J. A. (1991). _Revolution and Rebellion in the Early Modern World_. University of California Press.
-* Korotayev, A., & Tsirel, S. (2010). "A Spectral Analysis of World GDP Dynamics." _Structure and Dynamics_, 4(1).
+## Primary Sources
 
-=== Applications
+- Turchin, P. (2003). *Historical Dynamics: Why States Rise and Fall*.
+  Princeton University Press.
 
-* Turchin, P., et al. (2018). "Quantitative historical analysis uncovers a single dimension of complexity that structures global variation in human social organization." _PNAS_, 115(2), E144-E151.
+- Turchin, P. (2016). *Ages of Discord: A Structural-Demographic
+  Analysis of American History*. Beresta Books.
 
-== Citation
+- Turchin, P., & Nefedov, S. A. (2009). *Secular Cycles*. Princeton
+  University Press.
+
+- Turchin, P. (2023). *End Times: Elites, Counter-Elites, and the Path
+  of Political Disintegration*. Penguin Press.
+
+## Theoretical Foundations
+
+- Goldstone, J. A. (1991). *Revolution and Rebellion in the Early Modern
+  World*. University of California Press.
+
+- Korotayev, A., & Tsirel, S. (2010). "A Spectral Analysis of World GDP
+  Dynamics." *Structure and Dynamics*, 4(1).
+
+## Applications
+
+- Turchin, P., et al. (2018). "Quantitative historical analysis uncovers
+  a single dimension of complexity that structures global variation in
+  human social organization." *PNAS*, 115(2), E144-E151.
+
+# Citation
 
 If you use this package in research, please cite:
 
-[source,bibtex]
-----
+```bibtex
 @software{cliodynamics_jl,
   author = {Jewell, Jonathan D.A.},
   title = {Cliodynamics.jl: Mathematical Modeling of Historical Dynamics},
   year = {2026},
   url = {https://github.com/hyperpolymath/Cliodynamics.jl}
 }
-----
+```
 
 And cite the foundational work:
 
-[source,bibtex]
-----
+```bibtex
 @book{turchin2003historical,
   author = {Turchin, Peter},
   title = {Historical Dynamics: Why States Rise and Fall},
   year = {2003},
   publisher = {Princeton University Press}
 }
-----
+```
 
-== Related Projects
+# Related Projects
 
-* https://seshatdatabank.info/[Seshat Global History Databank] — Database for testing cliodynamic theories
-* https://github.com/hyperpolymath/Cliometrics.jl[Cliometrics.jl] — Quantitative economic history
+- [Seshat Global History Databank](https://seshatdatabank.info/) —
+  Database for testing cliodynamic theories
 
-== Contributing
+- <a href="https://github.com/hyperpolymath/Cliometrics.jl"
+  class="jl">Cliometrics</a> — Quantitative economic history
 
-See link:CONTRIBUTING.md[CONTRIBUTING.md] for guidelines.
+# Contributing
 
-== License
+See <a href="CONTRIBUTING.md" class="md">CONTRIBUTING</a> for
+guidelines.
 
-Copyright (c) 2026 Jonathan D.A. Jewell (hyperpolymath) <j.d.a.jewell@open.ac.uk>
+# License
 
-This project is licensed under the Palimpsest License (MPL-2.0). See link:LICENSE[LICENSE] for details.
+Copyright (c) 2026 Jonathan D.A. Jewell (hyperpolymath)
+\<[j.d.a.jewell@open.ac](j.d.a.jewell@open.ac).uk\>
+
+This project is licensed under the Palimpsest License (MPL-2.0). See
+[LICENSE](LICENSE) for details.
