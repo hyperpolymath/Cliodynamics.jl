@@ -20,6 +20,6 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-      - uses: JuliaRegistries/TagBot@v1.25.10
+      - uses: JuliaRegistries/TagBot@v1.25.11
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
