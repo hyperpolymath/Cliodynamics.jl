@@ -1,61 +1,65 @@
-<!--
-SPDX-License-Identifier: CC-BY-SA-4.0
-Copyright (c) Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
--->
-# Plotting
+== Plotting
 
-Cliodynamics.jl provides plot recipes via a package extension that loads automatically when `Plots.jl` (or `RecipesBase`) is available.
+Cliodynamics.jl provides plot recipes via a package extension that loads
+automatically when `+Plots.jl+` (or `+RecipesBase+`) is available.
 
-## Usage
+=== Usage
 
-```julia
+[source,julia]
+----
 using Cliodynamics
 using Plots  # Triggers extension loading
-```
+----
 
-## Available Recipes
+=== Available Recipes
 
-### Political Stress Indicator
+==== Political Stress Indicator
 
-```julia
+[source,julia]
+----
 psi_result = political_stress_indicator(data)
 plot(psi_result, Val(:psi))
-```
+----
 
 Shows PSI composite line with MMP, EMP, and SFD component breakdown.
 
-### Elite Overproduction Index
+==== Elite Overproduction Index
 
-```julia
+[source,julia]
+----
 eoi_result = elite_overproduction_index(data)
 plot(eoi_result, Val(:eoi))
-```
+----
 
 Shows EOI with zero baseline and filled area.
 
-### Secular Cycle Decomposition
+==== Secular Cycle Decomposition
 
-```julia
+[source,julia]
+----
 analysis = secular_cycle_analysis(timeseries, window=30)
 plot(analysis, Val(:secular_cycle))
-```
+----
 
 Two-panel layout showing trend and cycle components.
 
-### Cycle Phase Timeline
+==== Cycle Phase Timeline
 
-```julia
+[source,julia]
+----
 phases = detect_cycle_phases(data)
 plot(phases, Val(:phases))
-```
+----
 
-Scatter plot with phases color-coded: green (Expansion), yellow (Stagflation), red (Crisis), blue (Depression).
+Scatter plot with phases color-coded: green (Expansion), yellow
+(Stagflation), red (Crisis), blue (Depression).
 
-### Conflict Intensity
+==== Conflict Intensity
 
-```julia
+[source,julia]
+----
 intensity = conflict_intensity(events, window=10)
 plot(intensity, Val(:conflict))
-```
+----
 
 Filled area plot of conflict intensity over time.

@@ -1,31 +1,30 @@
-<!--
-SPDX-License-Identifier: CC-BY-SA-4.0
-Copyright (c) Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
--->
-# API Reference
+== API Reference
 
-## Types
+=== Types
 
-```@docs
+[source,@docs]
+----
 MalthusianParams
 DemographicStructuralParams
 StateCapacityParams
 SecularCyclePhase
 InstabilityEvent
-```
+----
 
-## Models
+=== Models
 
-```@docs
+[source,@docs]
+----
 malthusian_model
 demographic_structural_model
 state_capacity_model
 collective_action_problem
-```
+----
 
-## Indicators
+=== Indicators
 
-```@docs
+[source,@docs]
+----
 elite_overproduction_index
 political_stress_indicator
 instability_probability
@@ -34,42 +33,47 @@ crisis_threshold
 instability_events
 population_pressure
 carrying_capacity_estimate
-```
+----
 
-## Secular Cycles
+=== Secular Cycles
 
-```@docs
+[source,@docs]
+----
 secular_cycle_analysis
 detect_cycle_phases
-```
+----
 
-## Model Fitting
+=== Model Fitting
 
-```@docs
+[source,@docs]
+----
 fit_malthusian
 fit_demographic_structural
 estimate_parameters
-```
+----
 
-## Data Integration
+=== Data Integration
 
-```@docs
+[source,@docs]
+----
 load_seshat_csv
 prepare_seshat_data
-```
+----
 
-## Utilities
+=== Utilities
 
-```@docs
+[source,@docs]
+----
 moving_average
 detrend
 normalize_timeseries
-```
+----
 
-## Spatial Models
+=== Spatial Models
 
-```@docs
+[source,@docs]
+----
 spatial_instability_diffusion
 territorial_competition_model
 frontier_formation_index
-```
+----
