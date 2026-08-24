@@ -1,36 +1,37 @@
-<!--
-SPDX-License-Identifier: CC-BY-SA-4.0
-Copyright (c) Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
--->
-# Model Fitting
+== Model Fitting
 
-## Malthusian Fitting
+=== Malthusian Fitting
 
 Recover growth rate and carrying capacity from observed population data:
 
-```@docs
+[source,@docs]
+----
 fit_malthusian
-```
+----
 
-## Demographic-Structural Fitting
+=== Demographic-Structural Fitting
 
-Fit the full DST model to historical time series with population, elite, and state capacity data:
+Fit the full DST model to historical time series with population, elite,
+and state capacity data:
 
-```@docs
+[source,@docs]
+----
 fit_demographic_structural
-```
+----
 
-## Generic Parameter Estimation
+=== Generic Parameter Estimation
 
 Fit arbitrary models with bootstrap confidence intervals:
 
-```@docs
+[source,@docs]
+----
 estimate_parameters
-```
+----
 
-### Example
+==== Example
 
-```julia
+[source,julia]
+----
 using Cliodynamics
 
 # Define a custom growth model
@@ -45,4 +46,4 @@ result = estimate_parameters(model_fn, observed, years, [80.0, 0.01], n_bootstra
 
 println("A = $(round(result.params[1], digits=1)) [$(round(result.ci_lower[1], digits=1)), $(round(result.ci_upper[1], digits=1))]")
 println("r = $(round(result.params[2], digits=5)) [$(round(result.ci_lower[2], digits=5)), $(round(result.ci_upper[2], digits=5))]")
-```
+----

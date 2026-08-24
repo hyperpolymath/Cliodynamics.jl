@@ -1,16 +1,14 @@
-<!--
-SPDX-License-Identifier: CC-BY-SA-4.0
-Copyright (c) Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
--->
-# Tutorial
+== Tutorial
 
-This tutorial walks through the core features of Cliodynamics.jl, from basic population models to full historical analysis pipelines.
+This tutorial walks through the core features of Cliodynamics.jl, from
+basic population models to full historical analysis pipelines.
 
-## Population Dynamics
+=== Population Dynamics
 
 The simplest model is Malthusian logistic growth:
 
-```julia
+[source,julia]
+----
 using Cliodynamics
 
 params = MalthusianParams(r=0.02, K=1000.0, N0=100.0)
@@ -20,13 +18,15 @@ sol = malthusian_model(params, tspan=(0.0, 200.0))
 println("t=0:   ", round(sol(0.0)[1], digits=1))
 println("t=100: ", round(sol(100.0)[1], digits=1))
 println("t=200: ", round(sol(200.0)[1], digits=1))
-```
+----
 
-## Demographic-Structural Theory
+=== Demographic-Structural Theory
 
-The DST model couples population, elites, and state capacity in a system of ODEs:
+The DST model couples population, elites, and state capacity in a system
+of ODEs:
 
-```julia
+[source,julia]
+----
 params = DemographicStructuralParams(
     r=0.015, K=1000.0, w=2.0, δ=0.03, ε=0.001,
     N0=500.0, E0=10.0, S0=100.0
@@ -36,13 +36,14 @@ sol = demographic_structural_model(params, tspan=(0.0, 300.0))
 # Three state variables: Population, Elites, State capacity
 state = sol(150.0)
 println("N=$(round(state[1],digits=1)), E=$(round(state[2],digits=1)), S=$(round(state[3],digits=1))")
-```
+----
 
-## Elite Overproduction
+=== Elite Overproduction
 
 Compute when elite numbers outpace available positions:
 
-```julia
+[source,julia]
+----
 using DataFrames
 
 data = DataFrame(
@@ -53,13 +54,14 @@ data = DataFrame(
 
 eoi = elite_overproduction_index(data)
 # eoi.eoi contains the index values (positive = overproduction)
-```
+----
 
-## Political Stress Indicator
+=== Political Stress Indicator
 
 The PSI combines three destabilizing forces:
 
-```julia
+[source,julia]
+----
 stress_data = DataFrame(
     year = 1800:1900,
     real_wages = 100.0 .- collect(0:100).^1.2 ./ 10,
@@ -69,25 +71,28 @@ stress_data = DataFrame(
 
 psi = political_stress_indicator(stress_data)
 # psi.psi = composite, psi.mmp, psi.emp, psi.sfd = components
-```
+----
 
-## Secular Cycle Analysis
+=== Secular Cycle Analysis
 
 Detect long-term oscillations and classify phases:
 
-```julia
+[source,julia]
+----
 # Detect cycles in time series data
 timeseries = 100.0 .+ 50.0 .* sin.(2π .* (1:300) ./ 100) .+ 2 .* randn(300)
 analysis = secular_cycle_analysis(Float64.(timeseries), window=30)
 println("Period: ", analysis.period, " years")
 println("Amplitude: ", round(analysis.amplitude, digits=2))
-```
+----
 
-## Seshat Data Integration
+=== Seshat Data Integration
 
-Load and analyze historical data from the Seshat Global History Databank:
+Load and analyze historical data from the Seshat Global History
+Databank:
 
-```julia
+[source,julia]
+----
 raw = load_seshat_csv("data/seshat_sample.csv")
 roman = prepare_seshat_data(raw, polity="RomPrinworlds")
 
@@ -95,13 +100,14 @@ roman = prepare_seshat_data(raw, polity="RomPrinworlds")
 roman_all = filter(row -> occursin("Rom", string(row.polity)), prepare_seshat_data(raw))
 sort!(roman_all, :year)
 eoi = elite_overproduction_index(roman_all)
-```
+----
 
-## Model Fitting
+=== Model Fitting
 
 Recover parameters from observed data:
 
-```julia
+[source,julia]
+----
 # Fit Malthusian model
 years = collect(0.0:10.0:100.0)
 population = [50.0 * exp(0.03 * t) for t in years]
@@ -112,13 +118,14 @@ println("Fitted r=$(round(result.params.r, digits=4))")
 model_fn(p, t) = p[1] .* exp.(p[2] .* (t .- t[1]))
 est = estimate_parameters(model_fn, population, years, [50.0, 0.02], n_bootstrap=200)
 println("95% CI for r: [$(round(est.ci_lower[2], digits=5)), $(round(est.ci_upper[2], digits=5))]")
-```
+----
 
-## Plotting
+=== Plotting
 
 When Plots.jl is loaded, plot recipes activate automatically:
 
-```julia
+[source,julia]
+----
 using Plots
 
 # PSI with component breakdown
@@ -129,4 +136,4 @@ plot(eoi, Val(:eoi))
 
 # Secular cycle decomposition
 plot(analysis, Val(:secular_cycle))
-```
+----
