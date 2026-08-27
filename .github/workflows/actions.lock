@@ -3,9 +3,11 @@
 # Docs: https://gh.io/actions-lockfile
 version: 'v0.0.2'
 workflows:
+    '.github/workflows/governance.yml': []
+    '.github/workflows/secret-scanner.yml': []
     '.github/workflows/CI.yml':
         - 'actions/checkout@v7.0.1'
-        - 'julia-actions/cache@v3.2.0'
+        - 'julia-actions/cache@v3.3.0'
         - 'julia-actions/julia-buildpkg@v1.7.0'
         - 'julia-actions/julia-runtest@v1.12.0'
         - 'julia-actions/setup-julia@v3.0.2'
@@ -13,10 +15,10 @@ workflows:
         - 'julia-actions/setup-julia@v3.0.2'
     '.github/workflows/Documenter.yml':
         - 'actions/checkout@v7.0.1'
-        - 'julia-actions/cache@v3.2.0'
+        - 'julia-actions/cache@v3.3.0'
         - 'julia-actions/setup-julia@v3.0.2'
     '.github/workflows/TagBot.yml':
-        - 'juliaregistries/tagbot@v1.25.10'
+        - 'juliaregistries/tagbot@v1.25.11'
     '.github/workflows/boj-build.yml':
         - 'actions/checkout@v7.0.1'
     '.github/workflows/casket-pages.yml':
@@ -25,10 +27,10 @@ workflows:
         - 'actions/configure-pages@v6.0.0'
         - 'actions/deploy-pages@v5.0.0'
         - 'actions/upload-pages-artifact@v5.0.0'
-        - 'haskell-actions/setup@v2.11.0'
+        - 'haskell-actions/setup@v2.12.0'
     '.github/workflows/codeql.yml':
         - 'actions/checkout@v7.0.1'
-        - 'github/codeql-action@v4.37.4'
+        - 'github/codeql-action@v4.37.7'
     '.github/workflows/dependabot-automerge.yml':
         - 'dependabot/fetch-metadata@v3.1.0'
     '.github/workflows/dogfood-gate.yml':
@@ -40,7 +42,7 @@ workflows:
         - 'actions/github-script@v9.0.0'
         - 'actions/upload-artifact@v7.0.1'
         - 'erlef/setup-beam@v1.24.1'
-        - 'github/codeql-action@v4.37.4'
+        - 'github/codeql-action@v4.37.7'
     '.github/workflows/instant-sync.yml':
         - 'peter-evans/repository-dispatch@v4.0.1'
     '.github/workflows/mirror.yml':
@@ -121,14 +123,14 @@ dependencies:
         commit: 'sha1-e4fba868fa4b1b91e1fdab776edc8cfbe6e9fb81'
         owner_id: 9919
         repo_id: 259445878
-    'github/codeql-action@v4.37.4':
-        ref: 'v4.37.4'
-        commit: 'sha1-f205ea1c3313d32999d8d6a48b4f6530d4437b38'
+    'github/codeql-action@v4.37.7':
+        ref: 'v4.37.7'
+        commit: 'sha1-ff2f1c621b7f889edc0d3c761ac2e6a3f8cdb0dd'
         owner_id: 9919
         repo_id: 259445878
-    'haskell-actions/setup@v2.11.0':
-        ref: 'v2.11.0'
-        commit: 'sha1-cd0d9bdd65b20557f41bea4dbe43d0b5fbbfe553'
+    'haskell-actions/setup@v2.12.0':
+        ref: 'v2.12.0'
+        commit: 'sha1-6037f33647c3f17758a2356c80fc4a53d7e0685d'
         owner_id: 75048950
         repo_id: 623796603
     'hyperpolymath/a2ml-ecosystem@main':
@@ -141,9 +143,9 @@ dependencies:
         commit: 'sha1-89f3c2702f4f650a92aa7411502f38da06abd562'
         owner_id: 6759885
         repo_id: 1275650185
-    'julia-actions/cache@v3.2.0':
-        ref: 'v3.2.0'
-        commit: 'sha1-b7788abd52452d5bc033d69796e110d9906af4ab'
+    'julia-actions/cache@v3.3.0':
+        ref: 'v3.3.0'
+        commit: 'sha1-a7bed9df697e5d7309d68afe7542a87621a8b6c8'
         owner_id: 53965732
         repo_id: 441908600
     'julia-actions/julia-buildpkg@v1.7.0':
@@ -161,9 +163,9 @@ dependencies:
         commit: 'sha1-fa02766e078afaaf09b14210362cee14137e6a32'
         owner_id: 53965732
         repo_id: 202020219
-    'juliaregistries/tagbot@v1.25.10':
-        ref: 'v1.25.10'
-        commit: 'sha1-14d7645453716d7a2f09b1da0504a024f97462a1'
+    'juliaregistries/tagbot@v1.25.11':
+        ref: 'v1.25.11'
+        commit: 'sha1-cded32665b34ca0496d3ac10a67d08ddfc726963'
         owner_id: 31455341
         repo_id: 180715061
     'ossf/scorecard-action@v2.4.4':
