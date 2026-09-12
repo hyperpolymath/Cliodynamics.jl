@@ -1,5 +1,6 @@
 # SPDX-License-Identifier: MPL-2.0
 # This workflow is managed by gh actions-lock.
+# This workflow is managed by gh actions-lock.
 
 name: CI
 on:
@@ -33,6 +34,6 @@ jobs:
       - uses: julia-actions/setup-julia@v3.0.2
         with:
           version: ${{ matrix.version }}
-      - uses: julia-actions/cache@v3.2.0
+      - uses: julia-actions/cache@v3.3.0
       - uses: julia-actions/julia-buildpkg@v1.7.0
       - uses: julia-actions/julia-runtest@v1.12.0

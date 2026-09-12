@@ -126,7 +126,7 @@ All files must have SPDX header:
 
 ## Notes for AI Agents
 
-- This is a **Julia package**, not Rust/Elixir/ReScript
+- This is a **Julia package**, not Rust/Elixir/AffineScript
 - The single-file design is intentional (don't suggest splitting)
 - Mathematical models follow academic literature (cite Turchin if modifying)
 - Test coverage is critical — all exported functions must have tests
