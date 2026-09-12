@@ -15,6 +15,7 @@ jobs:
     timeout-minutes: 15
     if: vars.GITLAB_MIRROR_ENABLED == 'true'
     steps:
+      - uses: step-security/harden-runner@e14015d583714f6e62063499dc959a02595150a1
       - uses: actions/checkout@v7.0.1
         with:
           fetch-depth: 0
@@ -34,6 +35,7 @@ jobs:
     timeout-minutes: 15
     if: vars.BITBUCKET_MIRROR_ENABLED == 'true'
     steps:
+      - uses: step-security/harden-runner@e14015d583714f6e62063499dc959a02595150a1
       - uses: actions/checkout@v7.0.1
         with:
           fetch-depth: 0
@@ -53,6 +55,7 @@ jobs:
     timeout-minutes: 15
     if: vars.CODEBERG_MIRROR_ENABLED == 'true'
     steps:
+      - uses: step-security/harden-runner@e14015d583714f6e62063499dc959a02595150a1
       - uses: actions/checkout@v7.0.1
         with:
           fetch-depth: 0
@@ -72,6 +75,7 @@ jobs:
     timeout-minutes: 15
     if: vars.SOURCEHUT_MIRROR_ENABLED == 'true'
     steps:
+      - uses: step-security/harden-runner@e14015d583714f6e62063499dc959a02595150a1
       - uses: actions/checkout@v7.0.1
         with:
           fetch-depth: 0
@@ -91,6 +95,7 @@ jobs:
     timeout-minutes: 15
     if: vars.DISROOT_MIRROR_ENABLED == 'true'
     steps:
+      - uses: step-security/harden-runner@e14015d583714f6e62063499dc959a02595150a1
       - uses: actions/checkout@v7.0.1
         with:
           fetch-depth: 0
@@ -110,6 +115,7 @@ jobs:
     timeout-minutes: 15
     if: vars.GITEA_MIRROR_ENABLED == 'true'
     steps:
+      - uses: step-security/harden-runner@e14015d583714f6e62063499dc959a02595150a1
       - uses: actions/checkout@v7.0.1
         with:
           fetch-depth: 0
@@ -129,6 +135,7 @@ jobs:
     timeout-minutes: 15
     if: vars.RADICLE_MIRROR_ENABLED == 'true'
     steps:
+      - uses: step-security/harden-runner@e14015d583714f6e62063499dc959a02595150a1
       - uses: actions/checkout@v7.0.1
         with:
           fetch-depth: 0
