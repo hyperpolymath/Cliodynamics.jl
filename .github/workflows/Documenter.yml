@@ -1,3 +1,4 @@
+# This workflow is managed by gh actions-lock.
 # SPDX-License-Identifier: MPL-2.0
 # This workflow is managed by gh actions-lock.
 # This workflow is managed by gh actions-lock.
@@ -17,7 +18,10 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
+      - uses: step-security/harden-runner@e14015d583714f6e62063499dc959a02595150a1
       - uses: actions/checkout@v7.0.1
+        with:
+          persist-credentials: false
       - uses: julia-actions/setup-julia@v3.0.2
         with:
           version: '1'

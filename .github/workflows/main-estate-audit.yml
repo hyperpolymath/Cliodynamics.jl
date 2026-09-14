@@ -1,0 +1,16 @@
+# This workflow is managed by gh actions-lock.
+
+name: "🔴 GATE: Central Estate CI/CD Audit"
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  workflow_call:
+
+permissions: {}
+
+jobs:
+  call-estate-audit:
+    uses: hyperpolymath/cicd-suite/.github/workflows/main-estate-audit.yml@main
