@@ -14,3 +14,5 @@ permissions: {}
 jobs:
   call-estate-audit:
     uses: hyperpolymath/cicd-suite/.github/workflows/main-estate-audit.yml@main
+      permissions:
+        contents: read
