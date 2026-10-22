@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-      - uses: julia-actions/setup-julia@v3.0.2
+      - uses: julia-actions/setup-julia@v3.0.3
         with:
           version: '1'
       # - uses: julia-actions/CompatHelper@v1
