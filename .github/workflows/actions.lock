@@ -6,8 +6,6 @@ workflows:
     '.github/workflows/CI.yml':
         - 'actions/checkout@v7.0.1'
         - 'julia-actions/cache@v3.5.0'
-        - 'julia-actions/julia-buildpkg@v1.7.0'
-        - 'julia-actions/julia-runtest@v1.12.0'
         - 'julia-actions/setup-julia@v3.0.3'
     '.github/workflows/CompatHelper.yml':
         - 'julia-actions/setup-julia@v3.0.3'
@@ -25,9 +23,9 @@ workflows:
         - 'actions/cache@v6.1.0'
         - 'actions/checkout@v7.0.1'
         - 'actions/configure-pages@v6.0.0'
-        - 'actions/deploy-pages@v5.0.0'
+        - 'actions/deploy-pages@v5.0.1'
         - 'actions/upload-pages-artifact@v5.0.0'
-        - 'haskell-actions/setup@v2.12.0'
+        - 'haskell-actions/setup@v2.12.1'
     '.github/workflows/codeql.yml':
         - 'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1'
         - 'github/codeql-action@v4.39.0'
@@ -83,9 +81,9 @@ dependencies:
         commit: 'sha1-45bfe0192ca1faeb007ade9deae92b16b8254a0d'
         owner_id: 44036562
         repo_id: 513659658
-    'actions/deploy-pages@v5.0.0':
-        ref: 'v5.0.0'
-        commit: 'sha1-cd2ce8fcbc39b97be8ca5fce6e763baed58fa128'
+    'actions/deploy-pages@v5.0.1':
+        ref: 'v5.0.1'
+        commit: 'sha1-368f82528645a54fb793d4d04e342629a3f51346'
         owner_id: 44036562
         repo_id: 438112499
     'actions/github-script@v9.0.0':
@@ -135,9 +133,9 @@ dependencies:
         commit: 'sha1-6f2ac81f5cd81fe351a197ba0b00d91d03cd2aee'
         owner_id: 9919
         repo_id: 259445878
-    'haskell-actions/setup@v2.12.0':
-        ref: 'v2.12.0'
-        commit: 'sha1-6037f33647c3f17758a2356c80fc4a53d7e0685d'
+    'haskell-actions/setup@v2.12.1':
+        ref: 'v2.12.1'
+        commit: 'sha1-0f8e8c99d88aeb3fbfd523f1ef2c6f762d10d64d'
         owner_id: 75048950
         repo_id: 623796603
     'hyperpolymath/deed-ecosystem@main':
@@ -155,16 +153,6 @@ dependencies:
         commit: 'sha1-9353db09a0f2bbbdec6f41791918c75d37391b36'
         owner_id: 53965732
         repo_id: 441908600
-    'julia-actions/julia-buildpkg@v1.7.0':
-        ref: 'v1.7.0'
-        commit: 'sha1-e3eb439fad4f9aba7da2667e7510e4a46ebc46e1'
-        owner_id: 53965732
-        repo_id: 210451482
-    'julia-actions/julia-runtest@v1.12.0':
-        ref: 'v1.12.0'
-        commit: 'sha1-6e050c8013b833b1195105ff2fce9cd802f53271'
-        owner_id: 53965732
-        repo_id: 208538601
     'julia-actions/setup-julia@v3.0.3':
         ref: 'v3.0.3'
         commit: 'sha1-da908477b5db94c10ffce8cfea9f2b3b9d5db687'
