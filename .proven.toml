@@ -1,0 +1,47 @@
+# SPDX-License-Identifier: MPL-2.0
+# Manifest for this repository (schema proven/manifest/v1); see
+# hyperpolymath/proven-cicd-and-workflows docs/PROVEN-ADOPTION.adoc.
+#
+# Detected: julia (Project.toml, src/, ext/, test/, benches/), zig (ffi/zig),
+# idris2 (src/abi/*.idr), node (package.json), shell (setup.sh). Only zig has a
+# runner in release 0.1, and its FFI does not compile today, so each language is
+# accounted for below rather than passed. No justfile recipe or tests/<category>.sh
+# exists, so nothing is inherited by convention.
+
+schema = "proven/manifest/v1"
+
+[languages.ignore.julia]
+reason = "the umbrella cannot provision julia in release 0.1. A real suite exists: test/runtests.jl (plus test/e2e_test.jl, test/property_test.jl) and benches/benchmarks.jl, run by .github/workflows/CI.yml via Pkg.test(). It is not exercised by proven until a julia runner lands."
+
+[languages.ignore.idris2]
+reason = "src/abi/{Types,Layout,Foreign}.idr are the ABI definitions; there is no .ipkg and no check that builds them today, and the umbrella cannot provision idris2 in release 0.1"
+
+[languages.ignore.node]
+reason = "package.json only declares prettier as a devDependency (formatting tooling); there is no JavaScript source and no test, build, smoke or p2p script for the umbrella to run"
+
+[languages.ignore.shell]
+reason = "one bootstrap script (setup.sh: platform detection, installs just). It has no tests and nothing for the umbrella to run."
+
+# ffi/zig has real tests (3 in src/main.zig, 15 in test/integration_test.zig) but
+# does not compile: src/main.zig declares `export fn Cliodynamics.jl_init()` (and
+# the other exports) with a dot in the identifier, which is not valid Zig;
+# `pub const Handle = opaque { allocator: ...; initialized: ... }` gives an opaque
+# type fields; build.zig installs include/cliodynamics.h which does not exist,
+# builds bench/bench.zig which does not exist, and uses b.addSharedLibrary, an API that is probably
+# gone in the umbrella's zig 0.15.2 (unverified). Visible, expiring waivers, not N/A.
+[categories.unit.zig.waiver]
+reason = "ffi/zig has tests but does not compile (invalid export names in src/main.zig, opaque type with fields, build.zig likely incompatible with zig 0.15); needs a repair or re-render of the FFI scaffold"
+until = "2026-12-31"
+[categories.build.zig.waiver]
+reason = "zig build fails: build.zig installs include/cliodynamics.h and builds bench/bench.zig, neither of which exists, and src/main.zig does not compile"
+until = "2026-12-31"
+[categories.smoke.zig.waiver]
+reason = "no separate smoke test exists for the zig FFI, and the FFI does not compile (see unit)"
+until = "2026-12-31"
+[categories.p2p.zig.waiver]
+reason = "no inter-component test exists for the zig FFI; it is not yet wired to the Julia package (see unit)"
+until = "2026-12-31"
+
+# No [bench.*]: benches/benchmarks.jl needs julia, which the umbrella cannot
+# provision in release 0.1, so a bench target would fail rather than measure; the
+# zig bench step points at bench/bench.zig, which does not exist.
