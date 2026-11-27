@@ -13,10 +13,10 @@ workflows:
         - 'actions/checkout@v7.0.1'
         - 'julia-actions/cache@v3.5.0'
         - 'julia-actions/setup-julia@v3.0.3'
-        - 'step-security/harden-runner@ccd8616d44fd3846e67624a50d5aad6d37bf2d25'
+        - 'step-security/harden-runner@1d88384fd173af6ecb012dfd0264a306b711241a'
     '.github/workflows/TagBot.yml':
-        - 'juliaregistries/tagbot@v1.25.13'
-        - 'step-security/harden-runner@ccd8616d44fd3846e67624a50d5aad6d37bf2d25'
+        - 'juliaregistries/tagbot@v1.25.15'
+        - 'step-security/harden-runner@1d88384fd173af6ecb012dfd0264a306b711241a'
     '.github/workflows/boj-build.yml':
         - 'actions/checkout@v7.0.1'
     '.github/workflows/casket-pages.yml':
@@ -28,10 +28,10 @@ workflows:
         - 'haskell-actions/setup@v2.12.1'
     '.github/workflows/codeql.yml':
         - 'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1'
-        - 'github/codeql-action@v4.39.0'
+        - 'github/codeql-action@v4.39.3'
     '.github/workflows/dependabot-automerge.yml':
         - 'dependabot/fetch-metadata@v3.1.0'
-        - 'step-security/harden-runner@ccd8616d44fd3846e67624a50d5aad6d37bf2d25'
+        - 'step-security/harden-runner@1d88384fd173af6ecb012dfd0264a306b711241a'
     '.github/workflows/dogfood-gate.yml':
         - 'actions/checkout@v7.0.1'
         - 'hyperpolymath/deed-ecosystem@main'
@@ -42,22 +42,22 @@ workflows:
         - 'actions/github-script@v9.0.0'
         - 'actions/upload-artifact@v7.0.2'
         - 'erlef/setup-beam@v1.24.1'
-        - 'github/codeql-action@v4.39.0'
-        - 'step-security/harden-runner@ccd8616d44fd3846e67624a50d5aad6d37bf2d25'
+        - 'github/codeql-action@v4.39.3'
+        - 'step-security/harden-runner@1d88384fd173af6ecb012dfd0264a306b711241a'
     '.github/workflows/instant-sync.yml':
         - 'peter-evans/repository-dispatch@v4.0.1'
-        - 'step-security/harden-runner@ccd8616d44fd3846e67624a50d5aad6d37bf2d25'
+        - 'step-security/harden-runner@1d88384fd173af6ecb012dfd0264a306b711241a'
     '.github/workflows/label-triage.yml': []
     '.github/workflows/labels.yml': []
     '.github/workflows/main-estate-audit.yml': []
     '.github/workflows/mirror.yml':
         - 'actions/checkout@v7.0.1'
         - 'dtolnay/rust-toolchain@master'
-        - 'step-security/harden-runner@ccd8616d44fd3846e67624a50d5aad6d37bf2d25'
+        - 'step-security/harden-runner@1d88384fd173af6ecb012dfd0264a306b711241a'
         - 'webfactory/ssh-agent@v0.10.0'
     '.github/workflows/push-email-notify.yml':
-        - 'dawidd6/action-send-mail@v22'
-        - 'step-security/harden-runner@ccd8616d44fd3846e67624a50d5aad6d37bf2d25'
+        - 'dawidd6/action-send-mail@v24'
+        - 'step-security/harden-runner@1d88384fd173af6ecb012dfd0264a306b711241a'
     '.github/workflows/scorecard.yml': []
     '.github/workflows/secret-scanner.yml': []
 dependencies:
@@ -67,7 +67,7 @@ dependencies:
         owner_id: 44036562
         repo_id: 215566462
     'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1':
-        ref: '3d3c42e5aac5ba805825da76410c181273ba90b1'
+        ref: 'v7.0.1'
         commit: 'sha1-3d3c42e5aac5ba805825da76410c181273ba90b1'
         owner_id: 44036562
         repo_id: 197814629
@@ -108,9 +108,9 @@ dependencies:
         repo_id: 496012378
         uses:
             - 'actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f'
-    'dawidd6/action-send-mail@v22':
-        ref: 'v22'
-        commit: 'sha1-67ce3558d613188179559c61d3565140cf389968'
+    'dawidd6/action-send-mail@v24':
+        ref: 'v24'
+        commit: 'sha1-27bf7a883db6de205849f760badd38a1a3ce0dd0'
         owner_id: 9713907
         repo_id: 222439721
     'dependabot/fetch-metadata@v3.1.0':
@@ -128,9 +128,9 @@ dependencies:
         commit: 'sha1-54075bcc5e249e4758d363f27d099f55d843f124'
         owner_id: 47606891
         repo_id: 331103973
-    'github/codeql-action@v4.39.0':
-        ref: 'v4.39.0'
-        commit: 'sha1-6f2ac81f5cd81fe351a197ba0b00d91d03cd2aee'
+    'github/codeql-action@v4.39.3':
+        ref: 'v4.39.3'
+        commit: 'sha1-33d7b85da1a04171e211befe2c739303b9a4c066'
         owner_id: 9919
         repo_id: 259445878
     'haskell-actions/setup@v2.12.1':
@@ -158,9 +158,9 @@ dependencies:
         commit: 'sha1-da908477b5db94c10ffce8cfea9f2b3b9d5db687'
         owner_id: 53965732
         repo_id: 202020219
-    'juliaregistries/tagbot@v1.25.13':
-        ref: 'v1.25.13'
-        commit: 'sha1-ffef3282bcacf1055e4d621a5c010959dfbe59ff'
+    'juliaregistries/tagbot@v1.25.15':
+        ref: 'v1.25.15'
+        commit: 'sha1-87cc4cc2b4639f6c743f5772f376a32914060732'
         owner_id: 31455341
         repo_id: 180715061
     'peter-evans/repository-dispatch@v4.0.1':
@@ -168,9 +168,9 @@ dependencies:
         commit: 'sha1-28959ce8df70de7be546dd1250a005dd32156697'
         owner_id: 18365890
         repo_id: 220359305
-    'step-security/harden-runner@ccd8616d44fd3846e67624a50d5aad6d37bf2d25':
-        ref: 'v2.22.1'
-        commit: 'sha1-ccd8616d44fd3846e67624a50d5aad6d37bf2d25'
+    'step-security/harden-runner@1d88384fd173af6ecb012dfd0264a306b711241a':
+        ref: 'v2.22.4'
+        commit: 'sha1-1d88384fd173af6ecb012dfd0264a306b711241a'
         owner_id: 88700172
         repo_id: 422287306
     'webfactory/ssh-agent@v0.10.0':

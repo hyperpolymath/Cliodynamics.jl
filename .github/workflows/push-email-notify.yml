@@ -17,9 +17,9 @@ jobs:
     if: ${{ vars.PUSH_EMAIL_ENABLED == 'true' }}
     runs-on: ubuntu-latest
     steps:
-      - uses: step-security/harden-runner@ccd8616d44fd3846e67624a50d5aad6d37bf2d25
+      - uses: step-security/harden-runner@1d88384fd173af6ecb012dfd0264a306b711241a
       - name: Send push notification email
-        uses: dawidd6/action-send-mail@v22
+        uses: dawidd6/action-send-mail@v24
         with:
           server_address: ${{ secrets.SMTP_HOST }}
           server_port: ${{ secrets.SMTP_PORT }}
